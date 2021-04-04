@@ -31,7 +31,12 @@ And you have to put the following in your onEnable method:
 Bukkit.getPluginManager().registerEvents(new GUIListener(this), this);
 ```
 
-
 To create a new GUI you have to create a class that extends GUI.
+
+## Help! I do not now how to get started.
+I recommend to take a little look at the [examples](https://github.com/Keksnet/JAGIL/tree/master/examples) to know how you can use it.
+
+
 If there are any questions please write me on Discord (Neo8#4608).
+
 Have Fun!
