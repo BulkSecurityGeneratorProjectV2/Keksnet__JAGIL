@@ -14,16 +14,16 @@ public class DemoGUI extends GUI {
 	
 	/* Basic constructor. */
 	public DemoGUI(OfflinePlayer p) {
-		super("§aGUI", 9, p); //Creates an GUI for the Player p. The GUI has the name §aGUI (§a is a colorcode) and it has 9 slots. Always remember to give GUIs a colorcode to prevent bugusing.
+		super("Â§aGUI", 9, p); //Creates an GUI for the Player p. The GUI has the name Â§aGUI (Â§a is a colorcode) and it has 9 slots. Always remember to give GUIs a colorcode to prevent bugusing.
 	}
 	
 	/* Here we can fill our GUI with staff. I recommend using the shipped ItemTool Class to create Items without pain :D */
 	@Override
 	public GUI fill() {
 		Inventory inv = this.getInventory(); //We can get the Inventory to fill it using this.getInventory()
-		inv.setItem(2, ItemTool.createItem("§aHello World", Material.APPLE)); //Basic method inv.setItem(int, ItemStack); but we are using ItemTool for creating items easily.
+		inv.setItem(2, ItemTool.createItem("Â§aHello World", Material.APPLE)); //Basic method inv.setItem(int, ItemStack); but we are using ItemTool for creating items easily.
 		String frozen_bee = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTdlMTIzYzA4NTg2N2JhYmU0ZmQ1ODIxMjg4OTNlM2JkMmYyOGEwOThhZGRiMWExZmM1ZDI3NTViZGFiYzgifX19";
-		inv.setItem(6, ItemTool.createBase64Skull(frozen_bee)); //We can even create Base64Skulls easily with ItemTool. And now we have a sweat little frozen bee in our GUI.
+		inv.setItem(6, ItemTool.createBase64Skull(frozen_bee)); //We can even create Base64Skulls easily with ItemTool. And now we have a sweet little frozen bee in our GUI.
 		return this; //Remember to return this. It is needed for chaining.
 	}
 
