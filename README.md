@@ -28,7 +28,7 @@ Version: [![](https://jitpack.io/v/Keksnet/JAGIL.svg)](https://jitpack.io/#Keksn
 You have to shade this repository in your jar using maven shadeplugin.
 And you have to put the following in your onEnable method:
 ```java
-JAGIL.start();
+JAGIL.init(this);
 ```
 
 To create a new GUI you have to create a class that extends GUI.
