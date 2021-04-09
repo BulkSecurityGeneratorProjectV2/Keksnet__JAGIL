@@ -2,8 +2,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.neo.jagil</groupId>
   <artifactId>JAGIL</artifactId>
-  <version>1.3</version>
+  <version>1.4</version>
   <build>
+  	<extensions>
+  		<extension>
+  			<groupId>org.apache.maven.wagon</groupId>
+  			<artifactId>wagon-ftp</artifactId>
+  			<version>3.0.0</version>
+  		</extension>
+  	</extensions>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
@@ -16,6 +23,12 @@
       </plugin>
     </plugins>
   </build>
+  <distributionManagement>
+  	<repository>
+  		<id>ftp-repo</id>
+  		<url>ftp://neo8.de/repo/</url>
+  	</repository>
+  </distributionManagement>
   <repositories>
   	<repository>
   		<id>minecraft-repo</id>

@@ -1,10 +1,43 @@
 # JAGIL
-[![](https://jitpack.io/v/Keksnet/JAGIL.svg)](https://jitpack.io/#Keksnet/JAGIL)
-
+Version: 1.4
 just another generic inventory library (for Spigot)
 
 ## Maven
-### Repository:
+###Version 1.3 and greater:
+#### Repository:
+Use this repository for version 1.3 and greater.
+```xml
+...
+<repositories>
+	...
+	<repository>
+		<id>repo.neo8.de</id>
+		<url>http://repo.neo8.de/</url>
+	</repository>
+	...
+</repositories>
+...
+```
+
+#### Dependency:
+Use this dependency for version 1.3 and greater.
+Newest Version: 1.4
+```xml
+...
+<dependencies>
+	...
+	<dependency>
+		<groupID>de.neo.jagil</groupID>
+		<artifactID
+	</dependency>
+	...
+</dependencies>
+...
+```
+
+#### Repository (outdated):
+**This repository is outdated. For newer versions use the repository above.**
+Use this repository for version 1.2 and lower only.
 ```xml
 <repositories>
     <repository>
@@ -14,13 +47,15 @@ just another generic inventory library (for Spigot)
 </repositories>
 ```
 
-### Dependency:
-Version: [![](https://jitpack.io/v/Keksnet/JAGIL.svg)](https://jitpack.io/#Keksnet/JAGIL)
+#### Dependency (outdated):
+**This dependency is outdated. For newer versions use the dependency above.**
+Use this dependency for version 1.2 and lower only.
+Version: 1.2
 ```xml
 <dependency>
     <groupId>com.github.Keksnet</groupId>
     <artifactId>JAGIL</artifactId>
-    <version>VERSION</version>
+    <version>1.2</version>
 </dependency>
 ```
 
