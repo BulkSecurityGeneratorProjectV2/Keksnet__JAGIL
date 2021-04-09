@@ -1,9 +1,10 @@
 # JAGIL
 Version: 1.4
+
 just another generic inventory library (for Spigot)
 
 ## Maven
-###Version 1.3 and greater:
+### Version 1.3 and greater:
 #### Repository:
 Use this repository for version 1.3 and greater.
 ```xml
@@ -21,6 +22,7 @@ Use this repository for version 1.3 and greater.
 
 #### Dependency:
 Use this dependency for version 1.3 and greater.
+
 Newest Version: 1.4
 ```xml
 ...
@@ -37,6 +39,7 @@ Newest Version: 1.4
 
 #### Repository (outdated):
 **This repository is outdated. For newer versions use the repository above.**
+
 Use this repository for version 1.2 and lower only.
 ```xml
 <repositories>
@@ -49,6 +52,7 @@ Use this repository for version 1.2 and lower only.
 
 #### Dependency (outdated):
 **This dependency is outdated. For newer versions use the dependency above.**
+
 Use this dependency for version 1.2 and lower only.
 Version: 1.2
 ```xml
