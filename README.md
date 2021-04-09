@@ -30,7 +30,9 @@ Newest Version: 1.4
 	...
 	<dependency>
 		<groupID>de.neo.jagil</groupID>
-		<artifactID
+		<artifactID>JAGIL</artifactID>
+		<version>1.4</version>
+		<scope>compile</scope>
 	</dependency>
 	...
 </dependencies>
@@ -60,6 +62,7 @@ Version: 1.2
     <groupId>com.github.Keksnet</groupId>
     <artifactId>JAGIL</artifactId>
     <version>1.2</version>
+    <scope>compile</scope<
 </dependency>
 ```
 
