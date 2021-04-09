@@ -39,6 +39,7 @@ Newest Version: 1.4
 ...
 ```
 
+### Version 1.2 and below:
 #### Repository (outdated):
 **This repository is outdated. For newer versions use the repository above.**
 
