@@ -9,6 +9,7 @@ import de.neo.jagil.manager.GUIManager;
 public class JAGIL {
 	
 	public static void init(JavaPlugin plugin) {
+		plugin.getLogger().info("Registered JAGIL from " + plugin.getDescription().getName() + " " + plugin.getDescription().getVersion());
 		new GUIManager();
 		Bukkit.getPluginManager().registerEvents(new GUIListener(plugin), plugin);
 	}
