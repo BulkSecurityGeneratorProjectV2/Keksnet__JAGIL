@@ -106,7 +106,7 @@ public class ItemTool {
 	}
 	
 	public static ItemStack addEnchantment(ItemStack is, Enchantment ench, Integer lvl) {
-		is.addEnchantment(ench, lvl);
+		is.addUnsafeEnchantment(ench, lvl);
 		return is;
 	}
 	
