@@ -31,7 +31,7 @@ Newest Version: 1.5
 	<dependency>
 		<groupID>de.neo.jagil</groupID>
 		<artifactID>JAGIL</artifactID>
-		<version>1.5</version>
+		<version>1.6</version>
 		<scope>compile</scope>
 	</dependency>
 	...
