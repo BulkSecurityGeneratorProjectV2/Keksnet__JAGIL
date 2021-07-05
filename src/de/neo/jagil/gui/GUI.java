@@ -112,7 +112,9 @@ public abstract class GUI {
 	}
 	
 	public GUI show(OfflinePlayer p) {
-		Logger.getLogger("JAGIL").warning("Using show(OfflinePlayer) for non-universal GUIs is dangerous. Please try to avoid it.");
+		if(p != null) {
+			Logger.getLogger("JAGIL").warning("Using show(OfflinePlayer) for non-universal GUIs is dangerous. Please try to avoid it.");
+		}
 		this.p = p;
 		GUIManager.getInstance().register(this);
 		this.updateInternal();
