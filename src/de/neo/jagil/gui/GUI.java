@@ -83,6 +83,7 @@ public abstract class GUI {
 	public GUI update() {
 		if(this.p != null) {
 			this.updateInternal();
+			return this;
 		}
 		throw new RuntimeException("This method should not be called on universal GUIs");
 	}
