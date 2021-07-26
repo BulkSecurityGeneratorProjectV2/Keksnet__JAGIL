@@ -16,7 +16,7 @@ import de.neo.jagil.manager.GUIManager;
 public abstract class GUI {
 	
 	private String name;
-	private Integer size;
+	private int size;
 	private InventoryType type;
 	private OfflinePlayer p;
 	private Inventory inv;
@@ -27,7 +27,7 @@ public abstract class GUI {
 		this.size = Integer.valueOf(String.valueOf((Math.floor(Bukkit.getOnlinePlayers().size() / 9) * 9) + 9).replace(".0", ""));
 	}
 	
-	public GUI(String name, Integer size) {
+	public GUI(String name, int size) {
 		this.name = name;
 		this.size = size;
 	}
@@ -45,7 +45,7 @@ public abstract class GUI {
 		GUIManager.getInstance().register(this);
 	}
 	
-	public GUI(String name, Integer size, OfflinePlayer p) {
+	public GUI(String name, int size, OfflinePlayer p) {
 		this.name = name;
 		this.size = size;
 		this.p = p;
@@ -63,7 +63,7 @@ public abstract class GUI {
 		return this.name;
 	}
 	
-	public Integer getSize() {
+	public int getSize() {
 		return this.size;
 	}
 	
@@ -126,15 +126,15 @@ public abstract class GUI {
 	
 	public abstract GUI fill();
 	
-	public abstract Boolean handle(InventoryClickEvent e);
+	public abstract boolean handle(InventoryClickEvent e);
 	
 	public GUI handleLast(InventoryClickEvent e) { return this; }
 	
-	public Boolean handleDrag(InventoryDragEvent e) { return true; }
+	public boolean handleDrag(InventoryDragEvent e) { return true; }
 	
 	public GUI handleDragLast(InventoryDragEvent e) { return this; }
 	
 	public GUI handleClose(InventoryCloseEvent e) { return this; }
 	
-	public Boolean isCancelledByDefault() { return true; }
+	public boolean isCancelledByDefault() { return true; }
 }

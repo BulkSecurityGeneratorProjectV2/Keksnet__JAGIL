@@ -68,7 +68,7 @@ public class ConfirmGUI extends GUI {
 	}
 
 	@Override
-	public Boolean handle(InventoryClickEvent e) {
+	public boolean handle(InventoryClickEvent e) {
 		Integer slot = e.getSlot();
 		switch (slot) {
 		case 2:
