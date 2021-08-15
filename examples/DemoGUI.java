@@ -29,7 +29,7 @@ public class DemoGUI extends GUI {
 
 	/* And here we can handle the click if someone clicked in our Inventory. It's easy, isn't is? */
 	@Override
-	public Boolean handle(InventoryClickEvent e) {
+	public boolean handle(InventoryClickEvent e) {
 		if(e.getWhoClicked().getType().equals(EntityType.PLAYER)) { //Check if a Player clicked in this Inventory. (To be honest: I do not know who else could click in a Inventory)
 			Player p = (Player) e.getWhoClicked(); //We cast the clicker to a player.
 			Integer slot = e.getSlot(); //and we save the slot in that the player clicked.

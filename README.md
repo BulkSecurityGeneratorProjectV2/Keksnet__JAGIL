@@ -1,5 +1,5 @@
 # JAGIL
-Version: 1.6
+Version: 2.0
 
 just another generic inventory library (for Spigot)
 
@@ -23,7 +23,7 @@ Use this repository for version 1.3 and greater.
 #### Dependency:
 Use this dependency for version 1.3 and greater.
 
-Newest Version: 1.6
+Newest Version: 2.0
 ```xml
 ...
 <dependencies>
@@ -31,7 +31,7 @@ Newest Version: 1.6
 	<dependency>
 		<groupID>de.neo.jagil</groupID>
 		<artifactID>JAGIL</artifactID>
-		<version>1.6</version>
+		<version>2.0</version>
 		<scope>compile</scope>
 	</dependency>
 	...
@@ -63,7 +63,7 @@ Version: 1.2
     <groupId>com.github.Keksnet</groupId>
     <artifactId>JAGIL</artifactId>
     <version>1.2</version>
-    <scope>compile</scope<
+    <scope>compile</scope>
 </dependency>
 ```
 
