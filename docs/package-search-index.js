@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"de.neo.jagil"},{"l":"de.neo.jagil.annotation"},{"l":"de.neo.jagil.gui"},{"l":"de.neo.jagil.handler"},{"l":"de.neo.jagil.listener"},{"l":"de.neo.jagil.manager"},{"l":"de.neo.jagil.util"}];updateSearchResults();
