@@ -2,39 +2,45 @@ package de.neo.jagil.manager;
 
 import java.util.HashMap;
 
+import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.gui.GUI;
 
 public class GUIManager {
 	
 	private static GUIManager INSTANCE;
 	
-	private HashMap<String, GUI> invs;
-	
+	private HashMap<String, GUI> inventories;
+
+	@Internal
 	public GUIManager() {
 		INSTANCE = this;
-		this.invs = new HashMap<>();
+		this.inventories = new HashMap<>();
 	}
-	
+
+	@Internal
 	public void register(GUI gui) {
-		this.invs.put(gui.getIdentifier(), gui);
+		this.inventories.put(gui.getIdentifier(), gui);
 	}
-	
+
 	public Boolean isGUIByJAGIL(String identifier) {
-		return this.invs.containsKey(identifier);
+		return this.inventories.containsKey(identifier);
 	}
-	
+
 	public GUI getGUI(String identifier) {
-		return this.invs.get(identifier);
+		return this.inventories.get(identifier);
 	}
-	
+
+	@Internal
 	public void unregister(String identifier) {
-		this.invs.remove(identifier);
+		this.inventories.remove(identifier);
 	}
-	
+
+	@Internal
 	public void unregister(GUI gui) {
-		this.invs.remove(gui.getIdentifier());
+		this.inventories.remove(gui.getIdentifier());
 	}
-	
+
+	@Internal
 	public static GUIManager getInstance() {
 		return INSTANCE;
 	}

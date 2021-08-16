@@ -1,5 +1,6 @@
 package de.neo.jagil.listener;
 
+import de.neo.jagil.annotation.Internal;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,11 +16,13 @@ import de.neo.jagil.manager.GUIManager;
 public class GUIListener implements Listener {
 	
 	private JavaPlugin plugin;
-	
+
+	@Internal
 	public GUIListener(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
-	
+
+	@Internal
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null && e.getInventory() != null) {
@@ -45,7 +48,8 @@ public class GUIListener implements Listener {
 			}
 		}
 	}
-	
+
+	@Internal
 	@EventHandler
 	public void onDrag(InventoryDragEvent e) {
 		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId().toString())) {
@@ -65,7 +69,8 @@ public class GUIListener implements Listener {
 			((Player)e.getWhoClicked()).updateInventory();
 		}
 	}
-	
+
+	@Internal
 	@EventHandler
 	public void onClose(InventoryCloseEvent e) {
 		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId().toString())) {

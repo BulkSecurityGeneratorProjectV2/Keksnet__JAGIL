@@ -1,14 +1,12 @@
 package de.neo.jagil.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Marks a method, package, constructor or annotation as {@link Internal}.
  * The marked objects should not be used.
  */
+@Documented
 @Target({ElementType.METHOD, ElementType.PACKAGE, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Internal {
@@ -18,6 +16,6 @@ public @interface Internal {
      *
      * @return is it planned to change the visibility of the object?
      */
-    boolean forVisibilityChange();
+    boolean forVisibilityChange() default false;
 
 }

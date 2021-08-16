@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import de.neo.jagil.handler.ConfirmationHandler;
 import de.neo.jagil.util.ItemTool;
+import org.bukkit.event.inventory.InventoryType;
 
 public class ConfirmGUI extends GUI {
 	
