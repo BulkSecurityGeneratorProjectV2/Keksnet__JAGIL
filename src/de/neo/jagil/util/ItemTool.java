@@ -78,8 +78,8 @@ public class ItemTool {
 	/**
 	 * Creates a new {@link ItemStack} of {@link Material#PLAYER_HEAD}.
 	 * Invokes {@link ItemTool#createSkull(int, OfflinePlayer)}.
+	 * Use {@link ItemTool#createBase64Skull(String, int, String)} for players that are offline
 	 *
-	 * @apiNote use {@link ItemTool#createBase64Skull(String, int, String)} for players that are offline
 	 * @param skullOwner the owner of the skull
 	 * @return the new {@link ItemStack}
 	 */
@@ -90,8 +90,8 @@ public class ItemTool {
 	/**
 	 * Creates a new {@link ItemStack} of {@link Material#PLAYER_HEAD}.
 	 * Invokes {@link ItemTool#createSkull(String, int, OfflinePlayer)}.
+	 * Use {@link ItemTool#createBase64Skull(String, int, String)} for players that are offline
 	 *
-	 * @apiNote use {@link ItemTool#createBase64Skull(String, int, String)} for players that are offline
 	 * @param amount amount of items in the {@link ItemStack}
 	 * @param skullOwner the owner of the skull
 	 * @return the new {@link ItemStack}

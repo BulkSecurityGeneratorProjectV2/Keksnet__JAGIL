@@ -115,7 +115,7 @@ public abstract class GUI {
 
 	/**
 	 * This method is called to create an Inventory.
-	 * @apiNote this is called by {@link GUI#show()} automatically.
+	 * This is called by {@link GUI#show()} automatically.
 	 *
 	 * @return instance for chaining
 	 */
