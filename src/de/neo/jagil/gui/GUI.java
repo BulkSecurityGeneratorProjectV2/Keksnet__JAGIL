@@ -1,13 +1,11 @@
 package de.neo.jagil.gui;
 
-import java.util.UUID;
-import java.util.logging.Logger;
-
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.annotation.NoCompatibilityMode;
 import de.neo.jagil.annotation.OptionalImplementation;
 import de.neo.jagil.annotation.UnstableFeature;
+import de.neo.jagil.manager.GUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -17,7 +15,9 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
-import de.neo.jagil.manager.GUIManager;
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Represents a {@link GUI}.
@@ -27,15 +27,15 @@ import de.neo.jagil.manager.GUIManager;
  * @author Neo8
  */
 public abstract class GUI {
-	
+
 	private String name;
 	private int size;
 	private InventoryType type;
 	private OfflinePlayer p;
 	private Inventory inv;
 
-	private long cooldown;
-	private long lastHandle;
+	private @XmlTransient long cooldown;
+	private @XmlTransient long lastHandle;
 
 	{
 		cooldown = 10_000_000;

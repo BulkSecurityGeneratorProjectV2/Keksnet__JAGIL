@@ -1,5 +1,5 @@
 # JAGIL
-Version: 2.0
+Version: 2.1.4
 
 just another generic inventory library (for Spigot)
 
@@ -23,7 +23,7 @@ Use this repository for version 1.3 and greater.
 #### Dependency:
 Use this dependency for version 1.3 and greater.
 
-Newest Version: 2.0
+Newest Version: 2.1.4
 ```xml
 ...
 <dependencies>
@@ -71,8 +71,9 @@ Version: 1.2
 You have to shade this repository in your jar using maven shadeplugin.
 And you have to put the following in your onEnable method:
 ```java
-JAGIL.init(this);
+JAGIL.init(this, compatibiltyMode);
 ```
+If you turn compatibilityMode on it will disable some features like save closing the inventory.
 
 To create a new GUI you have to create a class that extends GUI.
 
