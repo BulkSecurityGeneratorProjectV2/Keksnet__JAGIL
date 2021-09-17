@@ -31,7 +31,7 @@ public class GUIListener implements Listener {
 				Boolean cancel = gui.isCancelledByDefault();
 				if(gui != null) {
 					if(e.getCurrentItem() != null && e.getClickedInventory() != e.getWhoClicked().getInventory()) {
-						cancel = gui.handleInternal(e);
+						cancel = gui.handle(e);
 					}
 				}
 				e.setCancelled(cancel);
@@ -73,14 +73,14 @@ public class GUIListener implements Listener {
 	@Internal
 	@EventHandler
 	public void onClose(InventoryCloseEvent e) {
-		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId())) {
-			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId());
+		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId().toString())) {
+			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId().toString());
 			if(gui != null) {
 				if(e.getInventory() != e.getPlayer().getInventory()) {
 					gui.handleClose(e);
 				}
 			}
-			GUIManager.getInstance().unregister(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId());
+			GUIManager.getInstance().unregister(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId().toString());
 			((Player)e.getPlayer()).updateInventory();
 		}
 	}

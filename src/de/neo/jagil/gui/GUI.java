@@ -1,8 +1,6 @@
 package de.neo.jagil.gui;
 
-import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
-import de.neo.jagil.annotation.NoCompatibilityMode;
 import de.neo.jagil.annotation.OptionalImplementation;
 import de.neo.jagil.annotation.UnstableFeature;
 import de.neo.jagil.manager.GUIManager;
@@ -15,7 +13,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -34,8 +31,8 @@ public abstract class GUI {
 	private OfflinePlayer p;
 	private Inventory inv;
 
-	private @XmlTransient long cooldown;
-	private @XmlTransient long lastHandle;
+	private long cooldown;
+	private long lastHandle;
 
 	{
 		cooldown = 10_000_000;
@@ -50,7 +47,8 @@ public abstract class GUI {
 	 * @param size size of the {@link Inventory}
 	 */
 	public GUI(String name, int size) {
-		this(name, size, null);
+		this.name = name;
+		this.size = size;
 	}
 
 	/**
@@ -62,7 +60,8 @@ public abstract class GUI {
 	 */
 	@UnstableFeature
 	public GUI(String name, InventoryType type) {
-		this(name, type, null);
+		this.name = name;
+		this.type = type;
 	}
 
 	/**
@@ -77,9 +76,7 @@ public abstract class GUI {
 		this.name = name;
 		this.size = size;
 		this.p = p;
-		if(this.p != null) {
-			GUIManager.getInstance().register(this);
-		}
+		GUIManager.getInstance().register(this);
 	}
 
 	/**
@@ -95,9 +92,7 @@ public abstract class GUI {
 		this.name = name;
 		this.type = type;
 		this.p = p;
-		if(this.p != null) {
-			GUIManager.getInstance().register(this);
-		}
+		GUIManager.getInstance().register(this);
 	}
 
 	public String getName() {
@@ -110,7 +105,7 @@ public abstract class GUI {
 
 	@Internal(forVisibilityChange = false)
 	public String getIdentifier() {
-		return this.name + "-" + (this.p != null ? this.p.getUniqueId() : "universal");
+		return this.name + "-" + this.p.getUniqueId().toString();
 	}
 	
 	public UUID getPlayerUUID() {
@@ -123,24 +118,6 @@ public abstract class GUI {
 	
 	public Inventory getInventory() {
 		return this.inv;
-	}
-
-	public void setCooldown(long cooldown) {
-		this.cooldown = cooldown;
-	}
-
-	public long getCooldown() {
-		return this.cooldown;
-	}
-
-	/**
-	 * Closes the {@link Inventory} of this {@link GUI} save.
-	 */
-	@NoCompatibilityMode
-	public void closeInventory() {
-		Bukkit.getScheduler().runTask(JAGIL.getPlugin(this.getClass().getName()), () -> {
-			getPlayer().closeInventory();
-		});
 	}
 
 	/**
@@ -182,15 +159,7 @@ public abstract class GUI {
 	public GUI show() {
 		this.update();
 		if(this.p != null) {
-			if(JAGIL.getPlugin(this.getClass().getName()) != null) {
-				if(getPlayer().getInventory() != null) {
-					Bukkit.getScheduler().runTask(JAGIL.getPlugin(this.getClass().getName()), () -> this.p.getPlayer().openInventory(this.inv));
-				}else {
-					this.p.getPlayer().openInventory(this.inv);
-				}
-			}else {
-				this.p.getPlayer().openInventory(this.inv);
-			}
+			this.p.getPlayer().openInventory(this.inv);
 			this.p.getPlayer().updateInventory();
 			return this;
 		}
@@ -221,13 +190,6 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	public abstract GUI fill();
-
-	@Internal
-	public boolean handleInternal(InventoryClickEvent e) {
-		if(System.nanoTime() - this.lastHandle <= this.cooldown) return true;
-		this.lastHandle = System.nanoTime();
-		return handle(e);
-	}
 
 	/**
 	 * Called on an {@link InventoryClickEvent} in this {@link Inventory}.
