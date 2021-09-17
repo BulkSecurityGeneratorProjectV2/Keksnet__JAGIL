@@ -1,5 +1,5 @@
 # JAGIL
-Version: 2.1.4
+Version: 2.1.3
 
 just another generic inventory library (for Spigot)
 
@@ -23,7 +23,7 @@ Use this repository for version 1.3 and greater.
 #### Dependency:
 Use this dependency for version 1.3 and greater.
 
-Newest Version: 2.1.4
+Newest Version: 2.1.3
 ```xml
 ...
 <dependencies>
