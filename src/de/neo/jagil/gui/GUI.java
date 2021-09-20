@@ -262,7 +262,7 @@ public abstract class GUI {
 	}
 
 	public GUI fillInternal() {
-		fillInternal();
+		fill();
 		return this;
 	}
 
