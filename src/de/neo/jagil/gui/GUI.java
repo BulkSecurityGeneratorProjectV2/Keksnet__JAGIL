@@ -288,80 +288,85 @@ public abstract class GUI {
 		String tag = "";
 		String next = "";
 		XmlItem item = null;
-		while(reader.hasNext()) {
-			XMLEvent event = reader.nextEvent();
 
-			switch(event.getEventType()) {
-				case XMLStreamConstants.START_ELEMENT:
-					StartElement element = event.asStartElement();
-					String elem = element.getName().getLocalPart();
-					if(elem.equalsIgnoreCase("gui") || elem.equalsIgnoreCase("item")
-							|| elem.equalsIgnoreCase("lore")) {
-						tag = elem;
-						if(elem.equalsIgnoreCase("item")) {
-							item = new XmlItem();
-						}
-					}else {
-						next = elem;
-					}
-					break;
+		parser: {
+			while(reader.hasNext()) {
+				XMLEvent event = reader.nextEvent();
 
-				case XMLStreamConstants.CHARACTERS:
-					Characters chars = event.asCharacters();
-					switch (next) {
-						case "id":
-							item.id = chars.getData();
-							break;
-
-						case "slot":
-							item.slot = Integer.parseInt(normalizeString(chars.getData()));
-							break;
-
-						case "material":
-							item.material = Material.getMaterial(chars.getData().toUpperCase());
-							break;
-
-						case "name":
-							if(tag.equalsIgnoreCase("item")) {
-								item.name = chars.getData();
-							}else if(tag.equalsIgnoreCase("gui")) {
-								gui.name = chars.getData();
+				switch(event.getEventType()) {
+					case XMLStreamConstants.START_ELEMENT:
+						StartElement element = event.asStartElement();
+						String elem = element.getName().getLocalPart();
+						if(elem.equalsIgnoreCase("gui") || elem.equalsIgnoreCase("item")
+								|| elem.equalsIgnoreCase("lore")) {
+							tag = elem;
+							if(elem.equalsIgnoreCase("item")) {
+								item = new XmlItem();
 							}
-							break;
+						}else {
+							next = elem;
+						}
+						break;
 
-						case "amount":
-							item.amount = Integer.parseInt(normalizeString(chars.getData()));
-							break;
+					case XMLStreamConstants.CHARACTERS:
+						Characters chars = event.asCharacters();
+						switch (next) {
+							case "id":
+								item.id = chars.getData();
+								break;
 
-						case "line":
-							item.lore.add(chars.getData());
-							break;
+							case "slot":
+								item.slot = Integer.parseInt(normalizeString(chars.getData()));
+								break;
 
-						case "size":
-							gui.size = Integer.parseInt(normalizeString(chars.getData()));
-							break;
-					}
-					next = "done";
-					break;
+							case "material":
+								item.material = Material.getMaterial(chars.getData().toUpperCase());
+								break;
 
-				case XMLStreamConstants.END_ELEMENT:
-					EndElement endElement = event.asEndElement();
-					if(endElement.getName().getLocalPart().equalsIgnoreCase("item")) {
-						gui.items.add(item);
-					}
-					break;
+							case "name":
+								if(tag.equalsIgnoreCase("item")) {
+									item.name = chars.getData();
+								}else if(tag.equalsIgnoreCase("gui")) {
+									gui.name = chars.getData();
+								}
+								break;
+
+							case "amount":
+								item.amount = Integer.parseInt(normalizeString(chars.getData()));
+								break;
+
+							case "line":
+								item.lore.add(chars.getData());
+								break;
+
+							case "size":
+								gui.size = Integer.parseInt(normalizeString(chars.getData()));
+								break;
+						}
+						next = "done";
+						break;
+
+					case XMLStreamConstants.END_ELEMENT:
+						EndElement endElement = event.asEndElement();
+						if(endElement.getName().getLocalPart().equalsIgnoreCase("item")) {
+							gui.items.add(item);
+						}
+						break;
+
+					case XMLStreamConstants.END_DOCUMENT:
+						reader.close();
+						break parser;
+				}
 			}
 		}
 
-		reader.close();
-
 		for(XmlItem xmlItem : gui.items) {
-			ItemStack is = new ItemStack(item.material, item.amount);
+			ItemStack is = new ItemStack(xmlItem.material, xmlItem.amount);
 			ItemMeta meta = is.getItemMeta();
-			meta.setDisplayName(item.name);
-			meta.setLore(item.lore);
+			meta.setDisplayName(xmlItem.name);
+			meta.setLore(xmlItem.lore);
 			is.setItemMeta(meta);
-			this.inv.setItem(item.slot, is);
+			this.inv.setItem(xmlItem.slot, is);
 		}
 
 		return gui;
