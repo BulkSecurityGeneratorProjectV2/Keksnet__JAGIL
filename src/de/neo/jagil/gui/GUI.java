@@ -438,7 +438,7 @@ public abstract class GUI {
 	public boolean isCancelledByDefault() { return true; }
 
 	@Internal
-	protected static class XmlGui {
+	public static class XmlGui {
 
 		public XmlGui() {
 			this.name = "";
@@ -459,7 +459,7 @@ public abstract class GUI {
 	}
 
 	@Internal
-	protected static class XmlItem {
+	public static class XmlItem {
 
 		public XmlItem() {
 			this.id = "ID HERE";
