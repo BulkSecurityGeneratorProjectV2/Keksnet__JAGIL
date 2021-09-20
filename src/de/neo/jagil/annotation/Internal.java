@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * The marked objects should not be used.
  */
 @Documented
-@Target({ElementType.METHOD, ElementType.PACKAGE, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.METHOD, ElementType.PACKAGE, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Internal {
 
