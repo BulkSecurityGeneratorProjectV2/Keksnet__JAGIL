@@ -1,30 +1,21 @@
 package de.neo.jagil.gui;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
-
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.annotation.NoCompatibilityMode;
 import de.neo.jagil.annotation.OptionalImplementation;
 import de.neo.jagil.annotation.UnstableFeature;
+import de.neo.jagil.manager.GUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-
-import de.neo.jagil.manager.GUIManager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -36,6 +27,11 @@ import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Represents a {@link GUI}.
@@ -46,18 +42,19 @@ import javax.xml.stream.events.XMLEvent;
  */
 public abstract class GUI {
 	
-	private String name;
+	private final String name;
 	private int size;
 	private InventoryType type;
 	private OfflinePlayer p;
 	private Inventory inv;
+	private HashMap<String, Integer> itemIds;
+	protected XmlGui guiData;
 
 	private long cooldown;
 	private long lastHandle;
 
 	{
 		cooldown = 10_000_000;
-		lastHandle = 0;
 	}
 
 	/**
@@ -71,6 +68,10 @@ public abstract class GUI {
 		XmlGui gui = loadFromXml(xmlFile);
 		this.name = gui.name;
 		this.size = gui.size;
+		this.itemIds = new HashMap<>();
+		for(XmlItem item : gui.items.values()) {
+			this.itemIds.put(item.id, item.slot);
+		}
 	}
 
 	/**
@@ -154,7 +155,7 @@ public abstract class GUI {
 		return this.size;
 	}
 
-	@Internal(forVisibilityChange = false)
+	@Internal
 	public String getIdentifier() {
 		return this.name + "-" + (this.p != null ? this.p.getUniqueId() : "universal");
 	}
@@ -184,39 +185,53 @@ public abstract class GUI {
 	 */
 	@NoCompatibilityMode
 	public void closeInventory() {
-		Bukkit.getScheduler().runTask(JAGIL.getPlugin(this.getClass().getName()), () -> {
-			getPlayer().closeInventory();
-		});
+		Bukkit.getScheduler().runTask(JAGIL.getPlugin(this.getClass().getName()), () -> getPlayer().closeInventory());
 	}
+
+	/**
+	 * Returns the slot of the {@link ItemStack} with the given id.
+	 *
+	 * @param itemId the id of the {@link ItemStack}
+	 * @return the slot of the {@link ItemStack} with the given id
+	 */
+	protected int getSlot(String itemId) {
+		return this.itemIds.get(itemId);
+	}
+
+	/**
+	 * Returns the {@link ItemStack} with the given id.
+	 *
+	 * @param itemId the id of the {@link ItemStack}
+	 * @return the {@link ItemStack} with the given id
+	 */
+	protected ItemStack getItem(String itemId) {
+        return this.guiData.items.get(getSlot(itemId)).toItem();
+    }
 
 	/**
 	 * This method is called to create an Inventory.
 	 * This is called by {@link GUI#show()} automatically.
-	 *
-	 * @return instance for chaining
 	 */
-	@Internal(forVisibilityChange = true)
-	public GUI update() {
+	@Internal
+	protected void update() {
 		if(this.p != null) {
 			this.updateInternal();
-			return this;
 		}
 		throw new RuntimeException("This method should not be called on universal GUIs");
 	}
 	
-	private GUI updateInternal() {
+	private void updateInternal() {
 		if(this.inv == null) {
 			if(this.size != 0) {
 				this.inv = Bukkit.createInventory(null, this.size, this.name);
 			}else {
 				this.inv = Bukkit.createInventory(null, this.type, this.name);
 			}
-			this.fillInternal();
+			this.fill();
 		}else {
-			this.fillInternal();
+			this.fill();
 			this.p.getPlayer().updateInventory();
 		}
-		return this;
 	}
 
 	/**
@@ -229,11 +244,8 @@ public abstract class GUI {
 		this.update();
 		if(this.p != null) {
 			if(JAGIL.getPlugin(this.getClass().getName()) != null) {
-				if(getPlayer().getInventory() != null) {
-					Bukkit.getScheduler().runTask(JAGIL.getPlugin(this.getClass().getName()), () -> this.p.getPlayer().openInventory(this.inv));
-				}else {
-					this.p.getPlayer().openInventory(this.inv);
-				}
+				getPlayer().getInventory();
+				Bukkit.getScheduler().runTask(JAGIL.getPlugin(this.getClass().getName()), () -> this.p.getPlayer().openInventory(this.inv));
 			}else {
 				this.p.getPlayer().openInventory(this.inv);
 			}
@@ -250,7 +262,7 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	public GUI show(OfflinePlayer p) {
-		if(p != null) {
+		if (p != null) {
 			Logger.getLogger("JAGIL").warning("Using show(OfflinePlayer) for non-universal GUIs is dangerous. Please try to avoid it.");
 		}
 		this.p = p;
@@ -261,17 +273,10 @@ public abstract class GUI {
 		return this;
 	}
 
-	public GUI fillInternal() {
-		fill();
-		return this;
-	}
-
 	/**
 	 * Fills this {@link GUI}
-	 *
-	 * @return the returntype is only for compatibility reasons.
 	 */
-	public abstract GUI fill();
+	public void fill() {}
 
 	/**
 	 * Loads a full {@link GUI} from a xml-file.
@@ -288,6 +293,7 @@ public abstract class GUI {
 		String tag = "";
 		String next = "";
 		XmlItem item = null;
+		XmlEnchantment enchantment = null;
 
 		parser: {
 			while(reader.hasNext()) {
@@ -298,10 +304,13 @@ public abstract class GUI {
 						StartElement element = event.asStartElement();
 						String elem = element.getName().getLocalPart();
 						if(elem.equalsIgnoreCase("gui") || elem.equalsIgnoreCase("item")
-								|| elem.equalsIgnoreCase("lore")) {
+								|| elem.equalsIgnoreCase("lore")
+								|| elem.equalsIgnoreCase("enchantment")) {
 							tag = elem;
 							if(elem.equalsIgnoreCase("item")) {
 								item = new XmlItem();
+							}else if(elem.equalsIgnoreCase("enchantment")) {
+								enchantment = new XmlEnchantment();
 							}
 						}else {
 							next = elem;
@@ -342,6 +351,16 @@ public abstract class GUI {
 							case "size":
 								gui.size = Integer.parseInt(normalizeString(chars.getData()));
 								break;
+
+							case "enchantmentName":
+								enchantment.enchantment = Arrays.stream(Enchantment.values())
+										.filter((it) -> chars.getData().equalsIgnoreCase(it.toString()))
+										.findFirst().get();
+								break;
+
+							case "enchantmentLevel":
+								enchantment.level = Integer.parseInt(normalizeString(chars.getData()));
+								break;
 						}
 						next = "done";
 						break;
@@ -349,7 +368,9 @@ public abstract class GUI {
 					case XMLStreamConstants.END_ELEMENT:
 						EndElement endElement = event.asEndElement();
 						if(endElement.getName().getLocalPart().equalsIgnoreCase("item")) {
-							gui.items.add(item);
+							gui.items.put(item.slot, item);
+						}else if(endElement.getName().getLocalPart().equalsIgnoreCase("enchantment")) {
+							item.enchantments.add(enchantment);
 						}
 						break;
 
@@ -360,12 +381,9 @@ public abstract class GUI {
 			}
 		}
 
-		for(XmlItem xmlItem : gui.items) {
-			ItemStack is = new ItemStack(xmlItem.material, xmlItem.amount);
-			ItemMeta meta = is.getItemMeta();
-			meta.setDisplayName(xmlItem.name);
-			meta.setLore(xmlItem.lore);
-			is.setItemMeta(meta);
+		for(XmlItem xmlItem : gui.items.values()) {
+			if(xmlItem.slot < 0) break;
+			ItemStack is = xmlItem.toItem();
 			this.inv.setItem(xmlItem.slot, is);
 		}
 
@@ -435,7 +453,7 @@ public abstract class GUI {
 	public GUI handleClose(InventoryCloseEvent e) { return this; }
 
 	/**
-	 * Returns if the event should cancelled by default.
+	 * Returns if the event should be cancelled by default.
 	 *
 	 * @return the default cancel-value
 	 */
@@ -448,12 +466,12 @@ public abstract class GUI {
 		public XmlGui() {
 			this.name = "";
 			this.size = 0;
-			this.items = new HashSet<>();
+			this.items = new HashMap<>();
 		}
 
 		public String name;
 		public int size;
-		public HashSet<XmlItem> items;
+		public HashMap<Integer, XmlItem> items;
 
 		@Override
 		public String toString() {
@@ -467,7 +485,7 @@ public abstract class GUI {
 	public static class XmlItem {
 
 		public XmlItem() {
-			this.id = "ID HERE";
+			this.id = "";
 			this.slot = 0;
 			this.material = Material.AIR;
 			this.name = "";
@@ -480,6 +498,19 @@ public abstract class GUI {
 		public String name;
 		public int amount;
 		public List<String> lore;
+		public HashSet<XmlEnchantment> enchantments;
+
+		public ItemStack toItem() {
+			ItemStack is = new ItemStack(this.material, this.amount);
+			for(XmlEnchantment enchantment : this.enchantments) {
+				is.addUnsafeEnchantment(enchantment.enchantment, enchantment.level);
+			}
+			ItemMeta meta = is.getItemMeta();
+			meta.setDisplayName(this.name);
+			meta.setLore(this.lore);
+			is.setItemMeta(meta);
+			return is;
+		}
 
 		@Override
 		public String toString() {
@@ -488,7 +519,26 @@ public abstract class GUI {
 					"material=" + this.material + ", " +
 					"name=" + this.name + ", " +
 					"amount=" + this.amount + ", " +
-					"lore=" + this.lore + "}";
+					"lore=" + this.lore + ", " +
+					"enchantments=" + this.enchantments + "}";
 		}
+	}
+
+	@Internal
+	public static class XmlEnchantment {
+
+		public XmlEnchantment() {
+			this.enchantment = null;
+			this.level = 0;
+		}
+
+		public Enchantment enchantment;
+		public int level;
+
+		@Override
+		public String toString() {
+            return "JsonEnchantment{enchantment=" + this.enchantment + ", " +
+                    "level=" + this.level + "}";
+        }
 	}
 }

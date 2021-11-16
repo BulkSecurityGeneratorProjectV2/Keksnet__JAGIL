@@ -62,36 +62,33 @@ public class ConfirmGUI extends GUI {
 	}
 
 	@Override
-	public GUI fill() {
+	public void fill() {
 		this.getInventory().setItem(2, ItemTool.createBase64Skull(this.yes_item, this.base64_yes));
 		this.getInventory().setItem(6, ItemTool.createBase64Skull(this.no_item, this.base64_no));
-		return this;
 	}
 
 	@Override
 	public boolean handle(InventoryClickEvent e) {
-		Integer slot = e.getSlot();
+		int slot = e.getSlot();
 		switch (slot) {
-		case 2:
-			e.getWhoClicked().closeInventory();
-			if(this.handler == null && this.cmd_yes != null) {
-				((Player)e.getWhoClicked()).performCommand(this.cmd_yes);
-			}else if(this.handler != null) {
-				this.handler.handleYes((OfflinePlayer)e.getWhoClicked());
+			case 2 -> {
+				e.getWhoClicked().closeInventory();
+				if (this.handler == null && this.cmd_yes != null) {
+					((Player) e.getWhoClicked()).performCommand(this.cmd_yes);
+				} else if (this.handler != null) {
+					this.handler.handleYes((OfflinePlayer) e.getWhoClicked());
+				}
 			}
-			break;
-			
-		case 6:
-			e.getWhoClicked().closeInventory();
-			if(this.handler == null && this.cmd_no != null) {
-				((Player)e.getWhoClicked()).performCommand(this.cmd_no);
-			}else if(this.handler != null) {
-				this.handler.handleNo((OfflinePlayer)e.getWhoClicked());
+			case 6 -> {
+				e.getWhoClicked().closeInventory();
+				if (this.handler == null && this.cmd_no != null) {
+					((Player) e.getWhoClicked()).performCommand(this.cmd_no);
+				} else if (this.handler != null) {
+					this.handler.handleNo((OfflinePlayer) e.getWhoClicked());
+				}
 			}
-			break;
-
-		default:
-			break;
+			default -> {
+			}
 		}
 		return true;
 	}
