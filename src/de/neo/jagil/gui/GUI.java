@@ -209,6 +209,22 @@ public abstract class GUI {
     }
 
 	/**
+	 * Returns the itemId of the {@link ItemStack} with the given slot.
+	 *
+	 * @param slot the slot of the {@link ItemStack}
+	 * @return the itemId of the {@link ItemStack} with the given slot
+	 */
+	protected String getItemId(int slot) {
+        String itemId = "";
+		for(Map.Entry<String, Integer> entry : this.itemIds.entrySet()) {
+			if(entry.getValue() == slot) {
+				itemId = entry.getKey();
+			}
+		}
+		return itemId;
+    }
+
+	/**
 	 * This method is called to create an Inventory.
 	 * This is called by {@link GUI#show()} automatically.
 	 */
