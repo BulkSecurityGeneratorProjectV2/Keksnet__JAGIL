@@ -232,6 +232,7 @@ public abstract class GUI {
 	protected void update() {
 		if(this.p != null) {
 			this.updateInternal();
+			return;
 		}
 		throw new RuntimeException("This method should not be called on universal GUIs");
 	}
