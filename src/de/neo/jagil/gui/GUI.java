@@ -6,6 +6,7 @@ import de.neo.jagil.annotation.NoCompatibilityMode;
 import de.neo.jagil.annotation.OptionalImplementation;
 import de.neo.jagil.annotation.UnstableFeature;
 import de.neo.jagil.manager.GUIManager;
+import de.neo.jagil.util.ItemTool;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -325,7 +326,7 @@ public abstract class GUI {
 								|| elem.equalsIgnoreCase("enchantment")) {
 							tag = elem;
 							if(elem.equalsIgnoreCase("item")) {
-								item = new XmlItem();
+								item = new XmlHead();
 							}else if(elem.equalsIgnoreCase("enchantment")) {
 								enchantment = new XmlEnchantment();
 							}
@@ -377,6 +378,12 @@ public abstract class GUI {
 
 							case "enchantmentLevel":
 								enchantment.level = Integer.parseInt(normalizeString(chars.getData()));
+								break;
+
+							case "base64":
+								if(item instanceof XmlHead) {
+									((XmlHead)item).texture = chars.getData();
+								}
 								break;
 						}
 						next = "done";
@@ -518,7 +525,16 @@ public abstract class GUI {
 		public HashSet<XmlEnchantment> enchantments;
 
 		public ItemStack toItem() {
-			ItemStack is = new ItemStack(this.material, this.amount);
+			ItemStack is;
+			if(this instanceof XmlHead) {
+				if(((XmlHead)this).texture.isEmpty()) {
+					is = new ItemStack(this.material, this.amount);
+				}else {
+					is = ItemTool.createBase64Skull("", this.amount, ((XmlHead)this).texture);
+				}
+			}else {
+				is = new ItemStack(this.material, this.amount);
+			}
 			for(XmlEnchantment enchantment : this.enchantments) {
 				is.addUnsafeEnchantment(enchantment.enchantment, enchantment.level);
 			}
@@ -557,5 +573,21 @@ public abstract class GUI {
             return "JsonEnchantment{enchantment=" + this.enchantment + ", " +
                     "level=" + this.level + "}";
         }
+	}
+
+	@Internal
+	public static class XmlHead extends XmlItem {
+
+		public XmlHead() {
+            this.texture = "";
+        }
+
+		public String texture;
+
+		@Override
+        public String toString() {
+            return "JsonHead{texture=" + this.texture + "}";
+        }
+
 	}
 }

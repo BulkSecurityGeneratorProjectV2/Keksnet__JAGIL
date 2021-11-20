@@ -174,13 +174,7 @@ public class ItemTool {
 			pr.setAccessible(true);
 			pr.set(meta, gp);
 			pr.setAccessible(false);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		is.setItemMeta(meta);
