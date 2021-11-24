@@ -405,6 +405,8 @@ public abstract class GUI {
 			}
 		}
 
+		this.inv = Bukkit.createInventory(null, gui.size, this.name);
+
 		for(XmlItem xmlItem : gui.items.values()) {
 			if(xmlItem.slot < 0) break;
 			ItemStack is = xmlItem.toItem();
