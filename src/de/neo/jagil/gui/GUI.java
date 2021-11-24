@@ -535,8 +535,10 @@ public abstract class GUI {
 			}else {
 				is = new ItemStack(this.material, this.amount);
 			}
-			for(XmlEnchantment enchantment : this.enchantments) {
-				is.addUnsafeEnchantment(enchantment.enchantment, enchantment.level);
+			if(this.enchantments != null) {
+				for(XmlEnchantment enchantment : this.enchantments) {
+					is.addUnsafeEnchantment(enchantment.enchantment, enchantment.level);
+				}
 			}
 			ItemMeta meta = is.getItemMeta();
 			meta.setDisplayName(this.name);
