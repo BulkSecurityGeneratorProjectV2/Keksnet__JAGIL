@@ -67,6 +67,7 @@ public abstract class GUI {
 	 */
 	public GUI(Path xmlFile) throws IOException, XMLStreamException {
 		XmlGui gui = loadFromXml(xmlFile);
+		this.guiData = gui;
 		this.name = gui.name;
 		this.size = gui.size;
 		this.itemIds = new HashMap<>();
@@ -107,6 +108,7 @@ public abstract class GUI {
 	 */
 	public GUI(Path xmlFile, OfflinePlayer p) throws IOException, XMLStreamException {
 		XmlGui gui = loadFromXml(xmlFile);
+		this.guiData = gui;
 		this.name = gui.name;
 		this.size = gui.size;
 		this.p = p;
