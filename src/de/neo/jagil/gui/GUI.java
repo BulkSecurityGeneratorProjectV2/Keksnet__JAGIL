@@ -73,6 +73,7 @@ public abstract class GUI {
 		this.itemIds = new HashMap<>();
 		for(XmlItem item : gui.items.values()) {
 			this.itemIds.put(item.id, item.slot);
+			System.out.println("REGISTERED: " + item);
 		}
 	}
 
@@ -112,6 +113,11 @@ public abstract class GUI {
 		this.name = gui.name;
 		this.size = gui.size;
 		this.p = p;
+		this.itemIds = new HashMap<>();
+		for(XmlItem item : gui.items.values()) {
+			this.itemIds.put(item.id, item.slot);
+			System.out.println("REGISTERED: " + item);
+		}
 		GUIManager.getInstance().register(this);
 	}
 
@@ -198,7 +204,7 @@ public abstract class GUI {
 	 * @return the slot of the {@link ItemStack} with the given id
 	 */
 	protected int getSlot(String itemId) {
-		return this.itemIds.get(itemId);
+		return this.itemIds.getOrDefault(itemId, 999);
 	}
 
 	/**
@@ -208,7 +214,11 @@ public abstract class GUI {
 	 * @return the {@link ItemStack} with the given id
 	 */
 	protected ItemStack getItem(String itemId) {
-        return this.guiData.items.get(getSlot(itemId)).toItem();
+		int slot = getSlot(itemId);
+		if(slot == 999) {
+			return new ItemStack(Material.AIR);
+		}
+        return this.guiData.items.get(slot).toItem();
     }
 
 	/**
@@ -341,10 +351,13 @@ public abstract class GUI {
 						Characters chars = event.asCharacters();
 						switch (next) {
 							case "id":
-								item.id = chars.getData();
+								System.out.println("id: " + chars.getData().trim());
+								item.id = chars.getData().trim();
 								break;
 
 							case "slot":
+								System.out.println("slot: " + chars.getData());
+								System.out.println("slot_n: " + Integer.parseInt(normalizeString(chars.getData())));
 								item.slot = Integer.parseInt(normalizeString(chars.getData()));
 								break;
 
@@ -410,7 +423,7 @@ public abstract class GUI {
 		this.inv = Bukkit.createInventory(null, gui.size, gui.name);
 
 		for(XmlItem xmlItem : gui.items.values()) {
-			if(xmlItem.slot < 0) break;
+			if(xmlItem.slot < 0) continue;
 			ItemStack is = xmlItem.toItem();
 			this.inv.setItem(xmlItem.slot, is);
 		}
@@ -422,11 +435,11 @@ public abstract class GUI {
 	private String normalizeString(String unfiltered) {
 		StringBuilder r = new StringBuilder();
 		for(char c : unfiltered.toCharArray()) {
-			if(Character.isDigit(c)) {
+			if(Character.isDigit(c) || c == '-') {
 				r.append(c);
 			}
 		}
-		return r.toString();
+		return r.toString().trim();
 	}
 
 	@Internal
@@ -530,17 +543,17 @@ public abstract class GUI {
 
 		public ItemStack toItem() {
 			ItemStack is;
-			if(this instanceof XmlHead) {
-				if(((XmlHead)this).texture.isEmpty()) {
+			if (this instanceof XmlHead) {
+				if (((XmlHead) this).texture.isEmpty()) {
 					is = new ItemStack(this.material, this.amount);
-				}else {
-					is = ItemTool.createBase64Skull("", this.amount, ((XmlHead)this).texture);
+				} else {
+					is = ItemTool.createBase64Skull("", this.amount, ((XmlHead) this).texture);
 				}
-			}else {
+			} else {
 				is = new ItemStack(this.material, this.amount);
 			}
-			if(this.enchantments != null) {
-				for(XmlEnchantment enchantment : this.enchantments) {
+			if (this.enchantments != null) {
+				for (XmlEnchantment enchantment : this.enchantments) {
 					is.addUnsafeEnchantment(enchantment.enchantment, enchantment.level);
 				}
 			}
@@ -592,7 +605,14 @@ public abstract class GUI {
 
 		@Override
         public String toString() {
-            return "JsonHead{texture=" + this.texture + "}";
+            return "JsonHead{id=" + this.id + ", " +
+					"slot=" + this.slot + ", " +
+					"material=" + this.material + ", " +
+					"name=" + this.name + ", " +
+					"amount=" + this.amount + ", " +
+					"lore=" + this.lore + ", " +
+					"enchantments=" + this.enchantments + ", " +
+					"texture=" + this.texture + "}";
         }
 
 	}
