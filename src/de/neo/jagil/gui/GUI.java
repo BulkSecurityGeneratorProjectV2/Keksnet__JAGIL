@@ -1,15 +1,12 @@
 package de.neo.jagil.gui;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
-import de.neo.jagil.annotation.*;
+import de.neo.jagil.annotation.Internal;
+import de.neo.jagil.annotation.NoCompatibilityMode;
+import de.neo.jagil.annotation.OptionalImplementation;
+import de.neo.jagil.annotation.UnstableFeature;
 import de.neo.jagil.manager.GUIManager;
-import de.neo.jagil.manager.GuiReaderManager;
-import de.neo.jagil.reader.GuiReader;
 import de.neo.jagil.util.ItemTool;
-import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -369,7 +366,6 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	@OptionalImplementation
-	@DeprecatedSignature
 	public GUI handleLast(InventoryClickEvent e) { return this; }
 
 	/**
@@ -388,7 +384,6 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	@OptionalImplementation
-	@DeprecatedSignature
 	public GUI handleDragLast(InventoryDragEvent e) { return this; }
 
 	/**
@@ -398,7 +393,6 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	@OptionalImplementation
-	@DeprecatedSignature
 	public GUI handleClose(InventoryCloseEvent e) { return this; }
 
 	/**
@@ -480,7 +474,6 @@ public abstract class GUI {
 			ItemMeta meta = is.getItemMeta();
 			meta.setDisplayName(this.name);
 			meta.setLore(this.lore);
-			if(this.customModelData != 0) meta.setCustomModelData(this.customModelData);
 			is.setItemMeta(meta);
 			return is;
 		}
