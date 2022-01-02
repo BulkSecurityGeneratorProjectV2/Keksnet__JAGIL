@@ -55,7 +55,8 @@ public abstract class GUI {
 	private long lastHandle;
 
 	{
-		cooldown = 10_000_000;
+		cooldown = 500;
+		lastHandle = System.currentTimeMillis();
 	}
 
 	/**
@@ -439,8 +440,8 @@ public abstract class GUI {
 
 	@Internal
 	public boolean handleInternal(InventoryClickEvent e) {
-		if(System.nanoTime() - this.lastHandle <= this.cooldown) return true;
-		this.lastHandle = System.nanoTime();
+		if(System.currentTimeMillis() - this.lastHandle <= this.cooldown) return true;
+		this.lastHandle = System.currentTimeMillis();
 		return handle(e);
 	}
 
