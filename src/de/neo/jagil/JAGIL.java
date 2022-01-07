@@ -3,6 +3,7 @@ package de.neo.jagil;
 import de.neo.jagil.annotation.DeprecatedDefaults;
 import de.neo.jagil.annotation.NoCompatibilityMode;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.neo.jagil.listener.GUIListener;
@@ -78,5 +79,16 @@ public class JAGIL {
 			}
 		}
 		return plugins.get(savedName);
+	}
+
+	public static JavaPlugin getLoader() {
+		Plugin loader = Bukkit.getPluginManager().getPlugin("JAGIL");
+		if(loader == null) {
+			return null;
+		}
+		if(loader instanceof JavaPlugin) {
+			return (JavaPlugin) loader;
+		}
+		return null;
 	}
 }
