@@ -535,6 +535,7 @@ public abstract class GUI {
 			this.slot = item.slot;
 			this.material = item.material;
 			this.name = item.name;
+			this.amount = item.amount;
 			this.lore = new ArrayList<>(item.lore);
 			this.enchantments = new HashSet<>(item.enchantments);
 		}
