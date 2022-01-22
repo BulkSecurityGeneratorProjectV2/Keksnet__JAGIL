@@ -527,6 +527,16 @@ public abstract class GUI {
 			this.material = Material.AIR;
 			this.name = "";
 			this.lore = new ArrayList<>();
+			this.enchantments = new HashSet<>();
+		}
+
+		public XmlItem(XmlItem item) {
+			this.id = item.id;
+			this.slot = item.slot;
+			this.material = item.material;
+			this.name = item.name;
+			this.lore = new ArrayList<>(item.lore);
+			this.enchantments = new HashSet<>(item.enchantments);
 		}
 
 		public String id;
@@ -596,6 +606,11 @@ public abstract class GUI {
 		public XmlHead() {
             this.texture = "";
         }
+
+		public XmlHead(XmlHead head) {
+			super(head);
+			this.texture = head.texture;
+		}
 
 		public String texture;
 
