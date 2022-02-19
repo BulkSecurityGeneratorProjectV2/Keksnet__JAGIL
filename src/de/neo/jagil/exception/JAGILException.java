@@ -6,4 +6,8 @@ public class JAGILException extends RuntimeException {
         super(message);
     }
 
+    public JAGILException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }
