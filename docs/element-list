@@ -1,5 +1,6 @@
 de.neo.jagil
 de.neo.jagil.annotation
+de.neo.jagil.exception
 de.neo.jagil.gui
 de.neo.jagil.handler
 de.neo.jagil.listener
