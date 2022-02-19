@@ -2,6 +2,8 @@ package de.neo.jagil.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -122,11 +124,9 @@ public class ItemTool {
 	 */
 	public static ItemStack createSkull(String name, int amount, OfflinePlayer skullOwner) {
 		ItemStack is = createItem(name, amount, Material.PLAYER_HEAD);
-		if(!name.equalsIgnoreCase("")) {
-			SkullMeta meta = (SkullMeta) is.getItemMeta();
-			meta.setOwningPlayer(skullOwner);
-			is.setItemMeta(meta);
-		}
+		SkullMeta meta = (SkullMeta) is.getItemMeta();
+		meta.setOwningPlayer(skullOwner);
+		is.setItemMeta(meta);
 		return is;
 	}
 
@@ -189,10 +189,7 @@ public class ItemTool {
 	 * @return the new {@link ItemStack}
 	 */
 	public static ItemStack setLore(ItemStack is, String... lore) {
-		ArrayList<String> lore_l = new ArrayList<>();
-		for(String l : lore) {
-			lore_l.add(l);
-		}
+		List<String> lore_l = Arrays.asList(lore);
 		ItemMeta meta = is.getItemMeta();
 		meta.setLore(lore_l);
 		is.setItemMeta(meta);
