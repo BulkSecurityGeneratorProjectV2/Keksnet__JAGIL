@@ -1,10 +1,7 @@
 package de.neo.jagil.gui;
 
 import de.neo.jagil.JAGIL;
-import de.neo.jagil.annotation.Internal;
-import de.neo.jagil.annotation.NoCompatibilityMode;
-import de.neo.jagil.annotation.OptionalImplementation;
-import de.neo.jagil.annotation.UnstableFeature;
+import de.neo.jagil.annotation.*;
 import de.neo.jagil.manager.GUIManager;
 import de.neo.jagil.util.ItemTool;
 import org.bukkit.Bukkit;
@@ -440,7 +437,7 @@ public abstract class GUI {
 
 	@Internal
 	public boolean handleInternal(InventoryClickEvent e) {
-		if(System.currentTimeMillis() - this.lastHandle <= this.cooldown) return true;
+		if(System.currentTimeMillis() - this.lastHandle <= this.cooldown) return isCancelledByDefault();
 		this.lastHandle = System.currentTimeMillis();
 		return handle(e);
 	}
@@ -460,6 +457,7 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	@OptionalImplementation
+	@DeprecatedSignature
 	public GUI handleLast(InventoryClickEvent e) { return this; }
 
 	/**
@@ -469,7 +467,7 @@ public abstract class GUI {
 	 * @return if the event should be cancelled or not.
 	 */
 	@OptionalImplementation
-	public boolean handleDrag(InventoryDragEvent e) { return true; }
+	public boolean handleDrag(InventoryDragEvent e) { return isCancelledByDefault(); }
 
 	/**
 	 * Like {@link GUI#handleDrag(InventoryDragEvent)} but optional and one tick later.
@@ -478,6 +476,7 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	@OptionalImplementation
+	@DeprecatedSignature
 	public GUI handleDragLast(InventoryDragEvent e) { return this; }
 
 	/**
@@ -487,6 +486,7 @@ public abstract class GUI {
 	 * @return instance for chaining
 	 */
 	@OptionalImplementation
+	@DeprecatedSignature
 	public GUI handleClose(InventoryCloseEvent e) { return this; }
 
 	/**
