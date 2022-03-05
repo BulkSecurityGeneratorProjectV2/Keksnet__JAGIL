@@ -2,9 +2,7 @@ package de.neo.jagil.listener;
 
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
-import de.neo.jagil.exception.JAGILException;
-import de.neo.jagil.gui.GUI;
-import de.neo.jagil.manager.GUIManager;
+import de.neo.jagil.debug.Hook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,12 +10,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import de.neo.jagil.gui.GUI;
+import de.neo.jagil.manager.GUIManager;
 
 public class GUIListener implements Listener {
 	
-	private final JavaPlugin plugin;
+	private JavaPlugin plugin;
 
 	@Internal
 	public GUIListener(JavaPlugin plugin) {
@@ -28,19 +28,19 @@ public class GUIListener implements Listener {
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null) {
-			String identifier = e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId();
-			if (GUIManager.getInstance().isGUIByJAGIL(identifier)) {
-				GUI gui = GUIManager.getInstance().getGUI(identifier);
+			if (GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId())) {
+				GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId());
 				if (gui == null) {
 					e.setCancelled(true);
 					throw new JAGILException("Internal error: GUI is null but registered in GUIManager!");
+				}
+				if(JAGIL.debugMode) {
+					JAGIL.debugger.executeHook(Hook.CLICK_LISTENER, gui, e);
 				}
 				boolean cancel = gui.isCancelledByDefault();
 				if (e.getCurrentItem() != null && e.getClickedInventory() != e.getWhoClicked().getInventory()) {
 					try {
 						cancel = gui.handleInternal(e);
-					}catch (Exception ex) {
-						ex.printStackTrace();
 					}
 				}
 				e.setCancelled(cancel);
@@ -62,6 +62,9 @@ public class GUIListener implements Listener {
 				e.setCancelled(true);
 				throw new JAGILException("Internal error: GUI is null but registered in GUIManager!");
 			}
+			if(JAGIL.debugMode) {
+				JAGIL.debugger.executeHook(Hook.DRAG_LISTENER, gui, e);
+			}
 			boolean cancel = gui.isCancelledByDefault();
 			try {
 				cancel = gui.handleDrag(e);
@@ -81,7 +84,10 @@ public class GUIListener implements Listener {
 	public void onClose(InventoryCloseEvent e) {
 		String identifier = e.getView().getTitle() + "-" + e.getPlayer().getUniqueId();
 		if(GUIManager.getInstance().isGUIByJAGIL(identifier)) {
-			GUI gui = GUIManager.getInstance().getGUI(identifier);
+			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId());
+			if(JAGIL.debugMode) {
+				JAGIL.debugger.executeHook(Hook.CLOSE_LISTENER, gui, e);
+			}
 			if(gui != null) {
 				if(e.getInventory() != e.getPlayer().getInventory()) {
 					gui.handleClose(e);
