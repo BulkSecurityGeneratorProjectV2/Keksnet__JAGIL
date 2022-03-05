@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
+import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
+import de.neo.jagil.debug.Hook;
 import de.neo.jagil.gui.GUI;
 
 public class GUIManager {
@@ -23,6 +25,9 @@ public class GUIManager {
 	public void register(GUI gui) {
 		unregister(gui);
 		this.inventories.put(gui.getIdentifier(), gui);
+		if(JAGIL.debugMode) {
+			JAGIL.debugger.executeHook(Hook.REGISTER_GUI, gui, this);
+		}
 	}
 
 	public Boolean isGUIByJAGIL(String identifier) {
