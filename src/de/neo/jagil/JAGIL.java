@@ -2,6 +2,7 @@ package de.neo.jagil;
 
 import de.neo.jagil.annotation.DeprecatedDefaults;
 import de.neo.jagil.annotation.NoCompatibilityMode;
+import de.neo.jagil.debug.Debugger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +17,9 @@ import java.util.HashMap;
 public class JAGIL {
 
 	private static HashMap<String, JavaPlugin> plugins;
+
+	public static boolean debugMode = false;
+	public static Debugger debugger = new Debugger();
 
 	static {
 		plugins = new HashMap<>();
@@ -56,6 +60,8 @@ public class JAGIL {
 			}
 			plugins.put(savedName, plugin);
 		}
+		if(debugMode) return;
+		debugMode = plugin.getConfig().getBoolean("jagil.dev.debug", false);
 	}
 
 	/**

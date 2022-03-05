@@ -2,7 +2,9 @@ package de.neo.jagil.manager;
 
 import java.util.HashMap;
 
+import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
+import de.neo.jagil.debug.Hook;
 import de.neo.jagil.gui.GUI;
 
 public class GUIManager {
@@ -20,6 +22,9 @@ public class GUIManager {
 	@Internal
 	public void register(GUI gui) {
 		this.inventories.put(gui.getIdentifier(), gui);
+		if(JAGIL.debugMode) {
+			JAGIL.debugger.executeHook(Hook.REGISTER_GUI, gui, this);
+		}
 	}
 
 	public Boolean isGUIByJAGIL(String identifier) {

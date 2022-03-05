@@ -1,6 +1,9 @@
 package de.neo.jagil.listener;
 
+import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
+import de.neo.jagil.debug.Hook;
+import de.neo.jagil.exception.JAGILException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +18,7 @@ import de.neo.jagil.manager.GUIManager;
 
 public class GUIListener implements Listener {
 	
-	private JavaPlugin plugin;
+	private final JavaPlugin plugin;
 
 	@Internal
 	public GUIListener(JavaPlugin plugin) {
@@ -25,26 +28,29 @@ public class GUIListener implements Listener {
 	@Internal
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
-		if(e.getClickedInventory() != null && e.getInventory() != null) {
-			if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId().toString())) {
-				GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId().toString());
-				Boolean cancel = gui.isCancelledByDefault();
-				if(gui != null) {
-					if(e.getCurrentItem() != null && e.getClickedInventory() != e.getWhoClicked().getInventory()) {
+		if(e.getClickedInventory() != null) {
+			if (GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId())) {
+				GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId());
+				if (gui == null) {
+					e.setCancelled(true);
+					throw new JAGILException("Internal error: GUI is null but registered in GUIManager!");
+				}
+				if(JAGIL.debugMode) {
+					JAGIL.debugger.executeHook(Hook.CLICK_LISTENER, gui, e);
+				}
+				boolean cancel = gui.isCancelledByDefault();
+				if (e.getCurrentItem() != null && e.getClickedInventory() != e.getWhoClicked().getInventory()) {
+					try {
 						cancel = gui.handleInternal(e);
+					}catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				}
 				e.setCancelled(cancel);
-				if(cancel) {
-					((Player)e.getWhoClicked()).updateInventory();
+				if (cancel) {
+					((Player) e.getWhoClicked()).updateInventory();
 				}
-				Bukkit.getScheduler().runTaskLater(this.plugin, new Runnable() {
-					
-					@Override
-					public void run() {
-						gui.handleLast(e);
-					}
-				}, 1l);
+				Bukkit.getScheduler().runTaskLater(this.plugin, () -> gui.handleLast(e), 1L);
 			}
 		}
 	}
@@ -52,21 +58,26 @@ public class GUIListener implements Listener {
 	@Internal
 	@EventHandler
 	public void onDrag(InventoryDragEvent e) {
-		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId().toString())) {
-			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId().toString());
-			Boolean cancel = true;
-			if(gui != null) {
+		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId())) {
+			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId());
+			if(gui == null) {
+				e.setCancelled(true);
+				throw new JAGILException("Internal error: GUI is null but registered in GUIManager!");
+			}
+			if(JAGIL.debugMode) {
+				JAGIL.debugger.executeHook(Hook.DRAG_LISTENER, gui, e);
+			}
+			boolean cancel = gui.isCancelledByDefault();
+			try {
 				cancel = gui.handleDrag(e);
+			}catch (Exception ex) {
+				ex.printStackTrace();
 			}
 			e.setCancelled(cancel);
-			Bukkit.getScheduler().runTaskLater(this.plugin, new Runnable() {
-				
-				@Override
-				public void run() {
-					gui.handleDragLast(e);
-				}
-			}, 1l);
-			((Player)e.getWhoClicked()).updateInventory();
+			if(cancel) {
+				((Player)e.getWhoClicked()).updateInventory();
+			}
+			Bukkit.getScheduler().runTaskLater(this.plugin, () -> gui.handleDragLast(e), 1L);
 		}
 	}
 
@@ -75,6 +86,9 @@ public class GUIListener implements Listener {
 	public void onClose(InventoryCloseEvent e) {
 		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId())) {
 			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId());
+			if(JAGIL.debugMode) {
+				JAGIL.debugger.executeHook(Hook.CLOSE_LISTENER, gui, e);
+			}
 			if(gui != null) {
 				if(e.getInventory() != e.getPlayer().getInventory()) {
 					gui.handleClose(e);
