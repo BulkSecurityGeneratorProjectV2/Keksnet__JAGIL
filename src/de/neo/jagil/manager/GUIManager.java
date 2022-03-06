@@ -1,6 +1,8 @@
 package de.neo.jagil.manager;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.UUID;
 
 import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.gui.GUI;
@@ -19,6 +21,7 @@ public class GUIManager {
 
 	@Internal
 	public void register(GUI gui) {
+		this.inventories.remove(gui.getIdentifier());
 		this.inventories.put(gui.getIdentifier(), gui);
 	}
 

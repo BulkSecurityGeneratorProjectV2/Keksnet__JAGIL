@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.neo.jagil.gui.GUI;
@@ -27,8 +28,9 @@ public class GUIListener implements Listener {
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null) {
-			if (GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId())) {
-				GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId());
+			String identifier = e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId();
+			if (GUIManager.getInstance().isGUIByJAGIL(identifier)) {
+				GUI gui = GUIManager.getInstance().getGUI(identifier);
 				if (gui == null) {
 					e.setCancelled(true);
 					throw new JAGILException("Internal error: GUI is null but registered in GUIManager!");
@@ -53,8 +55,9 @@ public class GUIListener implements Listener {
 	@Internal
 	@EventHandler
 	public void onDrag(InventoryDragEvent e) {
-		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId())) {
-			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId());
+		String identifier = e.getView().getTitle() + "-" + e.getWhoClicked().getUniqueId();
+		if(GUIManager.getInstance().isGUIByJAGIL(identifier)) {
+			GUI gui = GUIManager.getInstance().getGUI(identifier);
 			if(gui == null) {
 				e.setCancelled(true);
 				throw new JAGILException("Internal error: GUI is null but registered in GUIManager!");
@@ -76,8 +79,9 @@ public class GUIListener implements Listener {
 	@Internal
 	@EventHandler
 	public void onClose(InventoryCloseEvent e) {
-		if(GUIManager.getInstance().isGUIByJAGIL(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId())) {
-			GUI gui = GUIManager.getInstance().getGUI(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId());
+		String identifier = e.getView().getTitle() + "-" + e.getPlayer().getUniqueId();
+		if(GUIManager.getInstance().isGUIByJAGIL(identifier)) {
+			GUI gui = GUIManager.getInstance().getGUI(identifier);
 			if(gui != null) {
 				if(e.getInventory() != e.getPlayer().getInventory()) {
 					gui.handleClose(e);

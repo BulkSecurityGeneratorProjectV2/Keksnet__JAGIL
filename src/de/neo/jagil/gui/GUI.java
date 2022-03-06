@@ -1,9 +1,13 @@
 package de.neo.jagil.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.*;
 import de.neo.jagil.manager.GUIManager;
 import de.neo.jagil.util.ItemTool;
+import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -46,30 +50,29 @@ public abstract class GUI {
 	private OfflinePlayer p;
 	private Inventory inv;
 	private HashMap<String, Integer> itemIds;
-	protected XmlGui guiData;
+	protected DataGui guiData;
 
 	private long cooldown;
 	private long lastHandle;
 
 	{
-		cooldown = 500;
-		lastHandle = System.currentTimeMillis();
+		cooldown = 50;
 	}
 
 	/**
 	 * Creates a new instance of the {@link GUI} class.
-	 * Use this constructor when you like to load a {@link GUI} from a xml-file.
+	 * Use this constructor when you like to load a {@link GUI} from a xml/json-file.
 	 * Use this constructor when you like to create a universal {@link GUI}.
 	 *
-	 * @param xmlFile the path to the xml-file
+	 * @param guiFile the path to the xml/json-file
 	 */
-	public GUI(Path xmlFile) throws IOException, XMLStreamException {
-		XmlGui gui = loadFromXml(xmlFile);
+	public GUI(Path guiFile) throws IOException, XMLStreamException {
+		DataGui gui = guiFile.toString().toLowerCase().endsWith(".xml") ? loadFromXml(guiFile) : loadFromJson(guiFile);
 		this.guiData = gui;
 		this.name = gui.name;
 		this.size = gui.size;
 		this.itemIds = new HashMap<>();
-		for(XmlItem item : gui.items.values()) {
+		for(GuiItem item : gui.items.values()) {
 			this.itemIds.put(item.id, item.slot);
 		}
 	}
@@ -99,19 +102,19 @@ public abstract class GUI {
 
 	/**
 	 * Creates a new instance of the {@link GUI} class.
-	 * Use this constructor when you like to load a {@link GUI} from a xml-file.
+	 * Use this constructor when you like to load a {@link GUI} from a xml/json-file.
 	 * Use this constructor when you like to create a non-universal {@link GUI}.
 	 *
-	 * @param xmlFile the path to the xml-file
+	 * @param guiFile the path to the xml/json-file
 	 */
-	public GUI(Path xmlFile, OfflinePlayer p) throws IOException, XMLStreamException {
-		XmlGui gui = loadFromXml(xmlFile);
+	public GUI(Path guiFile, OfflinePlayer p) throws IOException, XMLStreamException {
+		DataGui gui = guiFile.toString().toLowerCase().endsWith(".xml") ? loadFromXml(guiFile) : loadFromJson(guiFile);
 		this.guiData = gui;
 		this.name = gui.name;
 		this.size = gui.size;
 		this.p = p;
 		this.itemIds = new HashMap<>();
-		for(XmlItem item : gui.items.values()) {
+		for(GuiItem item : gui.items.values()) {
 			this.itemIds.put(item.id, item.slot);
 		}
 		GUIManager.getInstance().register(this);
@@ -311,15 +314,15 @@ public abstract class GUI {
 	 * @throws IOException an {@link IOException} occured.
 	 * @throws XMLStreamException a {@link XMLStreamException} occured.
 	 */
-	public XmlGui loadFromXml(Path file) throws IOException, XMLStreamException {
-		XmlGui gui = new XmlGui();
+	public DataGui loadFromXml(Path file) throws IOException, XMLStreamException {
+		DataGui gui = new DataGui();
 
 		XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(Files.newInputStream(file));
 
 		String tag = "";
 		String next = "";
-		XmlItem item = null;
-		XmlEnchantment enchantment = null;
+		GuiItem item = null;
+		GuiEnchantment enchantment = null;
 
 		parser: {
 			while(reader.hasNext()) {
@@ -336,7 +339,7 @@ public abstract class GUI {
 							if(elem.equalsIgnoreCase("item")) {
 								item = new XmlHead();
 							}else if(elem.equalsIgnoreCase("enchantment")) {
-								enchantment = new XmlEnchantment();
+								enchantment = new GuiEnchantment();
 							}
 						}else {
 							next = elem;
@@ -415,10 +418,83 @@ public abstract class GUI {
 
 		this.inv = Bukkit.createInventory(null, gui.size, gui.name);
 
-		for(XmlItem xmlItem : gui.items.values()) {
+		for(GuiItem xmlItem : gui.items.values()) {
 			if(xmlItem.slot < 0) continue;
 			ItemStack is = xmlItem.toItem();
 			this.inv.setItem(xmlItem.slot, is);
+		}
+
+		return gui;
+	}
+
+	/**
+	 * Loads a full {@link GUI} from a json file
+	 *
+	 * @param file the json file to load from
+	 * @return the {@link DataGui}
+	 */
+	public DataGui loadFromJson(Path file) throws IOException {
+		DataGui gui = new DataGui();
+
+		String jsonString = Files.readString(file);
+		JsonObject json = new Gson().fromJson(jsonString, JsonObject.class);
+
+		gui.name = ParseUtil.getJsonString(json, "name");
+		gui.size = json.get("size").getAsInt();
+
+		if(!json.has("items")) {
+			Bukkit.getLogger().warning("[JAGIL] Empty GUI " + file + ": no items section!");
+			return gui;
+		}
+
+		for(JsonElement elem : json.get("items").getAsJsonArray()) {
+			JsonObject jsonItem = elem.getAsJsonObject();
+			GuiItem item = new XmlHead();
+
+			item.id = ParseUtil.getJsonString(jsonItem, "id");
+			item.slot = jsonItem.get("slot").getAsInt();
+			item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
+			item.name = ParseUtil.getJsonString(jsonItem, "name");
+			item.amount = ParseUtil.getJsonInt(jsonItem, "amount");
+			if(jsonItem.has("lore")) {
+				for(JsonElement strElem : jsonItem.get("lore").getAsJsonArray()) {
+					item.lore.add(strElem.getAsString());
+				}
+			}
+
+			if(jsonItem.has("enchantments")) {
+				for(JsonElement enchantElem : jsonItem.get("enchantments").getAsJsonArray()) {
+					JsonObject enchJson = enchantElem.getAsJsonObject();
+					GuiEnchantment enchantment = new GuiEnchantment();
+					enchantment.enchantment =
+							Arrays.stream(Enchantment.values())
+									.filter(it -> enchJson.get("name").getAsString().equalsIgnoreCase(it.toString()))
+									.findFirst().get();
+					enchantment.level = enchJson.get("level").getAsInt();
+					item.enchantments.add(enchantment);
+				}
+			}
+
+			if(jsonItem.has("base64")) {
+				((XmlHead)item).texture = ParseUtil.getJsonString(jsonItem, "base64");
+			}
+
+			gui.items.put(item.slot, item);
+
+			if(jsonItem.has("fillTo")) {
+				int fillMax = jsonItem.get("fillTo").getAsInt();
+				for(int i = item.slot + 1; i < fillMax; i++) {
+					gui.items.put(i, new XmlHead((XmlHead)item));
+				}
+			}
+		}
+
+		this.inv = Bukkit.createInventory(null, gui.size, gui.name);
+
+		for(GuiItem guiItem : gui.items.values()) {
+			if(guiItem.slot < 0) continue;
+			ItemStack is = guiItem.toItem();
+			this.inv.setItem(guiItem.slot, is);
 		}
 
 		return gui;
@@ -498,9 +574,9 @@ public abstract class GUI {
 	public boolean isCancelledByDefault() { return true; }
 
 	@Internal
-	public static class XmlGui {
+	public static class DataGui {
 
-		public XmlGui() {
+		public DataGui() {
 			this.name = "";
 			this.size = 0;
 			this.items = new HashMap<>();
@@ -508,7 +584,7 @@ public abstract class GUI {
 
 		public String name;
 		public int size;
-		public HashMap<Integer, XmlItem> items;
+		public HashMap<Integer, GuiItem> items;
 
 		@Override
 		public String toString() {
@@ -519,9 +595,9 @@ public abstract class GUI {
 	}
 
 	@Internal
-	public static class XmlItem {
+	public static class GuiItem {
 
-		public XmlItem() {
+		public GuiItem() {
 			this.id = "";
 			this.slot = 0;
 			this.material = Material.AIR;
@@ -530,7 +606,7 @@ public abstract class GUI {
 			this.enchantments = new HashSet<>();
 		}
 
-		public XmlItem(XmlItem item) {
+		public GuiItem(GuiItem item) {
 			this.id = item.id;
 			this.slot = item.slot;
 			this.material = item.material;
@@ -546,7 +622,7 @@ public abstract class GUI {
 		public String name;
 		public int amount;
 		public List<String> lore;
-		public HashSet<XmlEnchantment> enchantments;
+		public HashSet<GuiEnchantment> enchantments;
 
 		public ItemStack toItem() {
 			ItemStack is;
@@ -560,7 +636,7 @@ public abstract class GUI {
 				is = new ItemStack(this.material, this.amount);
 			}
 			if (this.enchantments != null) {
-				for (XmlEnchantment enchantment : this.enchantments) {
+				for (GuiEnchantment enchantment : this.enchantments) {
 					is.addUnsafeEnchantment(enchantment.enchantment, enchantment.level);
 				}
 			}
@@ -584,9 +660,9 @@ public abstract class GUI {
 	}
 
 	@Internal
-	public static class XmlEnchantment {
+	public static class GuiEnchantment {
 
-		public XmlEnchantment() {
+		public GuiEnchantment() {
 			this.enchantment = null;
 			this.level = 0;
 		}
@@ -602,7 +678,7 @@ public abstract class GUI {
 	}
 
 	@Internal
-	public static class XmlHead extends XmlItem {
+	public static class XmlHead extends GuiItem {
 
 		public XmlHead() {
             this.texture = "";
