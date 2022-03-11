@@ -157,6 +157,7 @@ public abstract class GUI {
 
 	public GUI setName(String name) {
 		this.name = name;
+		GUIManager.getInstance().register(this);
 		return this;
 	}
 

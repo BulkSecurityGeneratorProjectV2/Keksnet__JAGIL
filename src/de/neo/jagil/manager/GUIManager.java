@@ -21,7 +21,7 @@ public class GUIManager {
 
 	@Internal
 	public void register(GUI gui) {
-		this.inventories.remove(gui.getIdentifier());
+		unregister(gui);
 		this.inventories.put(gui.getIdentifier(), gui);
 	}
 
