@@ -44,7 +44,7 @@ import java.util.logging.Logger;
  */
 public abstract class GUI {
 	
-	private final String name;
+	private String name;
 	private int size;
 	private InventoryType type;
 	private OfflinePlayer p;
@@ -153,6 +153,11 @@ public abstract class GUI {
 		if(this.p != null) {
 			GUIManager.getInstance().register(this);
 		}
+	}
+
+	public GUI setName(String name) {
+		this.name = name;
+		return this;
 	}
 
 	public String getName() {
