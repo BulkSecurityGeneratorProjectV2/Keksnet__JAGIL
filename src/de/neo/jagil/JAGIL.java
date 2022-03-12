@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class JAGIL {
 
 	private static HashMap<String, JavaPlugin> plugins;
+	public static JavaPlugin loaderPlugin;
 
 	public static boolean debugMode = false;
 	public static Debugger debugger = new Debugger();

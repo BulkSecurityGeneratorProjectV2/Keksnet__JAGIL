@@ -117,7 +117,7 @@ public abstract class GUI {
 		for(GuiItem item : gui.items.values()) {
 			this.itemIds.put(item.id, item.slot);
 		}
-		GUIManager.getInstance().register(this);
+		register();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public abstract class GUI {
 		this.size = size;
 		this.p = p;
 		if(this.p != null) {
-			GUIManager.getInstance().register(this);
+			register();
 		}
 	}
 
@@ -151,13 +151,19 @@ public abstract class GUI {
 		this.type = type;
 		this.p = p;
 		if(this.p != null) {
-			GUIManager.getInstance().register(this);
+			register();
 		}
+	}
+
+	private void register() {
+		Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> {
+			GUIManager.getInstance().register(this);
+		}, 2L);
 	}
 
 	public GUI setName(String name) {
 		this.name = name;
-		GUIManager.getInstance().register(this);
+		register();
 		return this;
 	}
 
@@ -285,6 +291,9 @@ public abstract class GUI {
 				this.p.getPlayer().openInventory(this.inv);
 			}
 			this.p.getPlayer().updateInventory();
+			Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> {
+				GUIManager.getInstance().lockIfNotLocked(getIdentifier());
+			}, 2L);
 			return this;
 		}
 		throw new RuntimeException("Please use show(OfflinePlayer) for universal GUIs");
@@ -301,7 +310,7 @@ public abstract class GUI {
 			Logger.getLogger("JAGIL").warning("Using show(OfflinePlayer) for non-universal GUIs is dangerous. Please try to avoid it.");
 		}
 		this.p = p;
-		GUIManager.getInstance().register(this);
+		register();
 		this.updateInternal();
 		this.show();
 		this.p = null;
