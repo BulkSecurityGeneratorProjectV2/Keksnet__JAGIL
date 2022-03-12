@@ -10,6 +10,12 @@ import org.bukkit.inventory.Inventory;
 import de.neo.jagil.util.ItemTool;
 import de.neo.jagil.gui.GUI;
 
+
+/*
+
+WARNING: THIS EXAMPLE IS VERY OLD AND AT SOME POINTS OUTDATED!!!
+
+*/
 public class DemoGUI extends GUI {
 	
 	/* Basic constructor. */
