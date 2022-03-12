@@ -1,0 +1,171 @@
+package de.neo.jagil.util;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import de.neo.jagil.gui.GUI;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * The ItemBuilder is an alternative to the {@link ItemTool} class.
+ * I would recommend using it for more complex cases.
+ */
+public class ItemBuilder {
+
+    private Material material;
+    private String name;
+    private int amount;
+    private int durability;
+    private ArrayList<String> lore;
+    private ArrayList<Pair<Enchantment, Integer>> enchantments;
+    private String texture;
+    private OfflinePlayer skullOwner;
+    private int customModelData;
+
+    /**
+     * Create a new ItemBuilder.
+     *
+     * @param material the material of the item
+     */
+    public ItemBuilder(Material material) {
+        this(material, "");
+    }
+
+    /**
+     * Create a new ItemBuilder.
+     *
+     * @param material the material of the item
+     * @param name     the name of the item
+     */
+    public ItemBuilder(Material material, String name) {
+        this(material, name, 1);
+    }
+
+    /**
+     * Create a new ItemBuilder.
+     *
+     * @param material the material of the item
+     * @param name     the name of the item
+     * @param amount   the amount of the item
+     */
+    public ItemBuilder(Material material, String name, int amount) {
+        this(material, name, amount, -1);
+    }
+
+    /**
+     * Create a new ItemBuilder.
+     *
+     * @param material the material of the item
+     * @param name     the name of the item
+     * @param amount   the amount of the item
+     * @param durability the durability of the item
+     *                   (-1 = ignore, -2 = unbreakable)
+     */
+    public ItemBuilder(Material material, String name, int amount, int durability) {
+        this.material = material;
+        this.name = name;
+        this.amount = amount;
+        this.durability = durability;
+        this.lore = new ArrayList<>();
+        this.enchantments = new ArrayList<>();
+        this.texture = null;
+        this.skullOwner = null;
+    }
+
+    public ItemBuilder withDisplayName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public ItemBuilder withAmount(int amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public ItemBuilder withDurability(int durability) {
+        this.durability = durability;
+        return this;
+    }
+
+    public ItemBuilder withLore(String... lore) {
+        this.lore.clear();
+        this.lore.addAll(List.of(lore));
+        return this;
+    }
+
+    public ItemBuilder addLore(String... lore) {
+        this.lore.addAll(List.of(lore));
+        return this;
+    }
+
+    public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
+        this.enchantments.add(new Pair<>(enchantment, level));
+        return this;
+    }
+
+    public ItemBuilder setBase64Head(String texture) {
+        this.texture = texture;
+        return this;
+    }
+
+    public ItemBuilder setSkullOwner(OfflinePlayer player) {
+        this.skullOwner = player;
+        return this;
+    }
+
+    public ItemBuilder withCustomModelData(int customModelData) {
+        this.customModelData = customModelData;
+        return this;
+    }
+
+    public ItemStack build() {
+        ItemStack is = new ItemStack(material, amount);
+        enchantments.forEach(pair -> is.addEnchantment(pair.getKey(), pair.getValue()));
+        ItemMeta meta = is.getItemMeta();
+        if(durability == -2) {
+            meta.setUnbreakable(true);
+        }else if(durability != -1) {
+            if(meta instanceof Damageable) {
+                ((Damageable) meta).setDamage(((Damageable) meta).getDamage() - durability);
+            }
+        }
+        if(!name.isEmpty()) {
+            meta.setDisplayName(name);
+        }
+        if(!lore.isEmpty()) {
+            meta.setLore(lore);
+        }
+        if(texture != null) {
+            GameProfile gp = new GameProfile(UUID.randomUUID(), "");
+            gp.getProperties().put("textures", new Property("textures", texture));
+            try {
+                Field pr = meta.getClass().getDeclaredField("profile");
+                pr.setAccessible(true);
+                pr.set(meta, gp);
+                pr.setAccessible(false);
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        if(skullOwner != null) {
+            SkullMeta skullMeta = (SkullMeta) meta;
+            skullMeta.setOwningPlayer(skullOwner);
+        }
+        if(customModelData != 0) {
+            meta.setCustomModelData(customModelData);
+        }
+        is.setItemMeta(meta);
+        return is;
+    }
+
+}

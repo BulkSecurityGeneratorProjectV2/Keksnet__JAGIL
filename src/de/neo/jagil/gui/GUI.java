@@ -158,7 +158,7 @@ public abstract class GUI {
 	private void register() {
 		Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> {
 			GUIManager.getInstance().register(this);
-		}, 2L);
+		}, 1L);
 	}
 
 	public GUI setName(String name) {
@@ -293,7 +293,7 @@ public abstract class GUI {
 			this.p.getPlayer().updateInventory();
 			Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> {
 				GUIManager.getInstance().lockIfNotLocked(getIdentifier());
-			}, 2L);
+			}, 1L);
 			return this;
 		}
 		throw new RuntimeException("Please use show(OfflinePlayer) for universal GUIs");
