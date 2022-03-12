@@ -1,7 +1,10 @@
 package de.neo.jagil.listener;
 
+import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.exception.JAGILException;
+import de.neo.jagil.gui.GUI;
+import de.neo.jagil.manager.GUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,11 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import de.neo.jagil.gui.GUI;
-import de.neo.jagil.manager.GUIManager;
 
 public class GUIListener implements Listener {
 	
@@ -87,8 +87,11 @@ public class GUIListener implements Listener {
 					gui.handleClose(e);
 				}
 			}
-			GUIManager.getInstance().unregister(e.getView().getTitle() + "-" + e.getPlayer().getUniqueId());
-			((Player)e.getPlayer()).updateInventory();
+			if(!GUIManager.getInstance().unlockIfLocked(identifier)) {
+				GUIManager.getInstance().unregister(identifier);
+			}
+			Player p = (Player) e.getPlayer();
+			p.updateInventory();
 		}
 	}
 }

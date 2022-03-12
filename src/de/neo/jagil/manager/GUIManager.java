@@ -12,11 +12,13 @@ public class GUIManager {
 	private static GUIManager INSTANCE;
 	
 	private HashMap<String, GUI> inventories;
+	private HashSet<String> deleteLock;
 
 	@Internal
 	public GUIManager() {
 		INSTANCE = this;
 		this.inventories = new HashMap<>();
+		this.deleteLock = new HashSet<>();
 	}
 
 	@Internal
@@ -41,6 +43,22 @@ public class GUIManager {
 	@Internal
 	public void unregister(GUI gui) {
 		this.inventories.remove(gui.getIdentifier());
+	}
+
+	@Internal
+	public boolean unlockIfLocked(String identifier) {
+		if (this.deleteLock.contains(identifier)) {
+			this.deleteLock.remove(identifier);
+			return true;
+		}
+		return false;
+	}
+
+	@Internal
+	public void lockIfNotLocked(String identifier) {
+		if(!this.deleteLock.contains(identifier)) {
+			this.deleteLock.add(identifier);
+		}
 	}
 
 	@Internal
