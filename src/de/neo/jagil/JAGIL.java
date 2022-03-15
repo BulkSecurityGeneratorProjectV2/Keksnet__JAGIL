@@ -2,6 +2,9 @@ package de.neo.jagil;
 
 import de.neo.jagil.annotation.DeprecatedDefaults;
 import de.neo.jagil.annotation.NoCompatibilityMode;
+import de.neo.jagil.manager.GuiReaderManager;
+import de.neo.jagil.reader.JsonGuiReader;
+import de.neo.jagil.reader.XmlGuiReader;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,6 +23,8 @@ public class JAGIL {
 
 	static {
 		plugins = new HashMap<>();
+		GuiReaderManager.getInstance().register(new JsonGuiReader());
+		GuiReaderManager.getInstance().register(new XmlGuiReader());
 	}
 
 	/**

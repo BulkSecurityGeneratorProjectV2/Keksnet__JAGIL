@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.*;
 import de.neo.jagil.manager.GUIManager;
+import de.neo.jagil.manager.GuiReaderManager;
+import de.neo.jagil.reader.GuiReader;
 import de.neo.jagil.util.ItemTool;
 import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Bukkit;
@@ -67,7 +69,7 @@ public abstract class GUI {
 	 * @param guiFile the path to the xml/json-file
 	 */
 	public GUI(Path guiFile) throws IOException, XMLStreamException {
-		DataGui gui = guiFile.toString().toLowerCase().endsWith(".xml") ? loadFromXml(guiFile) : loadFromJson(guiFile);
+		DataGui gui = loadGui(guiFile);
 		this.guiData = gui;
 		this.name = gui.name;
 		this.size = gui.size;
@@ -108,7 +110,7 @@ public abstract class GUI {
 	 * @param guiFile the path to the xml/json-file
 	 */
 	public GUI(Path guiFile, OfflinePlayer p) throws IOException, XMLStreamException {
-		DataGui gui = guiFile.toString().toLowerCase().endsWith(".xml") ? loadFromXml(guiFile) : loadFromJson(guiFile);
+		DataGui gui = loadGui(guiFile);
 		this.guiData = gui;
 		this.name = gui.name;
 		this.size = gui.size;
@@ -323,207 +325,26 @@ public abstract class GUI {
 	public void fill() {}
 
 	/**
-	 * Loads a full {@link GUI} from a xml-file.
+	 * Loads a full {@link GUI} from a file
 	 *
-	 * @param file the {@link Path} to the xml-file.
-	 * @throws IOException an {@link IOException} occured.
-	 * @throws XMLStreamException a {@link XMLStreamException} occured.
-	 */
-	public DataGui loadFromXml(Path file) throws IOException, XMLStreamException {
-		DataGui gui = new DataGui();
-
-		XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(Files.newInputStream(file));
-
-		String tag = "";
-		String next = "";
-		GuiItem item = null;
-		GuiEnchantment enchantment = null;
-
-		parser: {
-			while(reader.hasNext()) {
-				XMLEvent event = reader.nextEvent();
-
-				switch(event.getEventType()) {
-					case XMLStreamConstants.START_ELEMENT:
-						StartElement element = event.asStartElement();
-						String elem = element.getName().getLocalPart();
-						if(elem.equalsIgnoreCase("gui") || elem.equalsIgnoreCase("item")
-								|| elem.equalsIgnoreCase("lore")
-								|| elem.equalsIgnoreCase("enchantment")) {
-							tag = elem;
-							if(elem.equalsIgnoreCase("item")) {
-								item = new XmlHead();
-							}else if(elem.equalsIgnoreCase("enchantment")) {
-								enchantment = new GuiEnchantment();
-							}
-						}else {
-							next = elem;
-						}
-						break;
-
-					case XMLStreamConstants.CHARACTERS:
-						Characters chars = event.asCharacters();
-						switch (next) {
-							case "id":
-								item.id = chars.getData().trim();
-								break;
-
-							case "slot":
-								item.slot = Integer.parseInt(normalizeString(chars.getData()));
-								break;
-
-							case "material":
-								item.material = Material.getMaterial(chars.getData().toUpperCase());
-								break;
-
-							case "name":
-								if(tag.equalsIgnoreCase("item")) {
-									item.name = chars.getData();
-								}else if(tag.equalsIgnoreCase("gui")) {
-									gui.name = chars.getData();
-								}
-								break;
-
-							case "amount":
-								item.amount = Integer.parseInt(normalizeString(chars.getData()));
-								break;
-
-							case "line":
-								item.lore.add(chars.getData());
-								break;
-
-							case "size":
-								gui.size = Integer.parseInt(normalizeString(chars.getData()));
-								break;
-
-							case "enchantmentName":
-								enchantment.enchantment = Arrays.stream(Enchantment.values())
-										.filter((it) -> chars.getData().equalsIgnoreCase(it.toString()))
-										.findFirst().get();
-								break;
-
-							case "enchantmentLevel":
-								enchantment.level = Integer.parseInt(normalizeString(chars.getData()));
-								break;
-
-							case "base64":
-								if(item instanceof XmlHead) {
-									((XmlHead)item).texture = chars.getData();
-								}
-								break;
-						}
-						next = "done";
-						break;
-
-					case XMLStreamConstants.END_ELEMENT:
-						EndElement endElement = event.asEndElement();
-						if(endElement.getName().getLocalPart().equalsIgnoreCase("item")) {
-							gui.items.put(item.slot, item);
-						}else if(endElement.getName().getLocalPart().equalsIgnoreCase("enchantment")) {
-							item.enchantments.add(enchantment);
-						}
-						break;
-
-					case XMLStreamConstants.END_DOCUMENT:
-						reader.close();
-						break parser;
-				}
-			}
-		}
-
-		this.inv = Bukkit.createInventory(null, gui.size, gui.name);
-
-		for(GuiItem xmlItem : gui.items.values()) {
-			if(xmlItem.slot < 0) continue;
-			ItemStack is = xmlItem.toItem();
-			this.inv.setItem(xmlItem.slot, is);
-		}
-
-		return gui;
-	}
-
-	/**
-	 * Loads a full {@link GUI} from a json file
-	 *
-	 * @param file the json file to load from
+	 * @param file the file to load from
 	 * @return the {@link DataGui}
 	 */
-	public DataGui loadFromJson(Path file) throws IOException {
-		DataGui gui = new DataGui();
+	private DataGui loadGui(Path file) throws IOException {
+		String[] fileName = file.toString().split("[.]");
+		GuiReader reader = GuiReaderManager.getInstance().getReader(fileName[fileName.length - 1].toLowerCase());
 
-		String jsonString = Files.readString(file);
-		JsonObject json = new Gson().fromJson(jsonString, JsonObject.class);
-
-		gui.name = ParseUtil.getJsonString(json, "name");
-		gui.size = json.get("size").getAsInt();
-
-		if(!json.has("items")) {
-			Bukkit.getLogger().warning("[JAGIL] Empty GUI " + file + ": no items section!");
-			return gui;
-		}
-
-		for(JsonElement elem : json.get("items").getAsJsonArray()) {
-			JsonObject jsonItem = elem.getAsJsonObject();
-			GuiItem item = new XmlHead();
-
-			item.id = ParseUtil.getJsonString(jsonItem, "id");
-			item.slot = jsonItem.get("slot").getAsInt();
-			item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
-			item.name = ParseUtil.getJsonString(jsonItem, "name");
-			item.amount = ParseUtil.getJsonInt(jsonItem, "amount");
-			if(jsonItem.has("lore")) {
-				for(JsonElement strElem : jsonItem.get("lore").getAsJsonArray()) {
-					item.lore.add(strElem.getAsString());
-				}
-			}
-
-			if(jsonItem.has("enchantments")) {
-				for(JsonElement enchantElem : jsonItem.get("enchantments").getAsJsonArray()) {
-					JsonObject enchJson = enchantElem.getAsJsonObject();
-					GuiEnchantment enchantment = new GuiEnchantment();
-					enchantment.enchantment =
-							Arrays.stream(Enchantment.values())
-									.filter(it -> enchJson.get("name").getAsString().equalsIgnoreCase(it.toString()))
-									.findFirst().get();
-					enchantment.level = enchJson.get("level").getAsInt();
-					item.enchantments.add(enchantment);
-				}
-			}
-
-			if(jsonItem.has("base64")) {
-				((XmlHead)item).texture = ParseUtil.getJsonString(jsonItem, "base64");
-			}
-
-			gui.items.put(item.slot, item);
-
-			if(jsonItem.has("fillTo")) {
-				int fillMax = jsonItem.get("fillTo").getAsInt();
-				for(int i = item.slot + 1; i < fillMax; i++) {
-					gui.items.put(i, new XmlHead((XmlHead)item));
-				}
-			}
-		}
+		DataGui gui = reader.read(file);
 
 		this.inv = Bukkit.createInventory(null, gui.size, gui.name);
 
-		for(GuiItem guiItem : gui.items.values()) {
+		for(GUI.GuiItem guiItem : gui.items.values()) {
 			if(guiItem.slot < 0) continue;
 			ItemStack is = guiItem.toItem();
 			this.inv.setItem(guiItem.slot, is);
 		}
 
 		return gui;
-	}
-
-	@Internal
-	private String normalizeString(String unfiltered) {
-		StringBuilder r = new StringBuilder();
-		for(char c : unfiltered.toCharArray()) {
-			if(Character.isDigit(c) || c == '-') {
-				r.append(c);
-			}
-		}
-		return r.toString().trim();
 	}
 
 	@Internal
@@ -638,6 +459,7 @@ public abstract class GUI {
 		public int amount;
 		public List<String> lore;
 		public HashSet<GuiEnchantment> enchantments;
+		public int customModelData;
 
 		public ItemStack toItem() {
 			ItemStack is;
@@ -658,6 +480,7 @@ public abstract class GUI {
 			ItemMeta meta = is.getItemMeta();
 			meta.setDisplayName(this.name);
 			meta.setLore(this.lore);
+			meta.setCustomModelData(this.customModelData);
 			is.setItemMeta(meta);
 			return is;
 		}
