@@ -68,15 +68,17 @@ public class JsonGuiReader extends GuiReader {
             }
 
             if(jsonItem.has("modelData")) {
-                ((GUI.XmlHead)item).customModelData = ParseUtil.getJsonInt(jsonItem, "modelData");
+                item.customModelData = jsonItem.get("modelData").getAsInt();
             }
 
             gui.items.put(item.slot, item);
 
             if(jsonItem.has("fillTo")) {
                 int fillMax = jsonItem.get("fillTo").getAsInt();
-                for(int i = item.slot + 1; i < fillMax; i++) {
-                    gui.items.put(i, new GUI.XmlHead((GUI.XmlHead)item));
+                for(int i = item.slot + 1; i <= fillMax; i++) {
+                    GUI.XmlHead item2 = new GUI.XmlHead((GUI.XmlHead)item);
+                    item2.slot = i;
+                    gui.items.put(i, item2);
                 }
             }
         }
