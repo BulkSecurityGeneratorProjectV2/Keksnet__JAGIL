@@ -480,7 +480,7 @@ public abstract class GUI {
 			ItemMeta meta = is.getItemMeta();
 			meta.setDisplayName(this.name);
 			meta.setLore(this.lore);
-			meta.setCustomModelData(this.customModelData);
+			if(this.customModelData != 0) meta.setCustomModelData(this.customModelData);
 			is.setItemMeta(meta);
 			return is;
 		}
