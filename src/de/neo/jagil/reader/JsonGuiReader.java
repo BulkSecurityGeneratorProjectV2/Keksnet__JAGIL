@@ -82,6 +82,28 @@ public class JsonGuiReader extends GuiReader {
                     gui.items.put(i, item2);
                 }
             }
+
+            if(jsonItem.has("fill")) {
+                for(JsonElement fillElem : jsonItem.get("fill").getAsJsonArray()) {
+                    if(fillElem.isJsonObject()) {
+                        JsonObject fillJson = fillElem.getAsJsonObject();
+                        int from = fillJson.get("from").getAsInt();
+                        int to = fillJson.get("to").getAsInt();
+                        for(int i = from; i <= to; i++) {
+                            GUI.XmlHead item2 = new GUI.XmlHead((GUI.XmlHead)item);
+                            item2.slot = i;
+                            gui.items.put(i, item2);
+                        }
+                    }else if(fillElem.isJsonPrimitive()) {
+                        int slot = fillElem.getAsInt();
+                        GUI.XmlHead item2 = new GUI.XmlHead((GUI.XmlHead)item);
+                        item2.slot = slot;
+                        gui.items.put(slot, item2);
+                    }else {
+                        Bukkit.getLogger().warning("[JAGIL] Invalid fill property item in GUI " + guiFile + ": " + fillElem);
+                    }
+                }
+            }
         }
 
         return gui;
