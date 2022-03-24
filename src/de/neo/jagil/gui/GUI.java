@@ -51,7 +51,7 @@ public abstract class GUI {
 	private InventoryType type;
 	private OfflinePlayer p;
 	private Inventory inv;
-	private HashMap<String, Integer> itemIds;
+	protected HashMap<String, Integer> itemIds;
 	protected DataGui guiData;
 
 	private long cooldown;
