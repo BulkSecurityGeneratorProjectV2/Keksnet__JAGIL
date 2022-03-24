@@ -44,6 +44,7 @@ public class JsonGuiReader extends GuiReader {
             item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
             item.name = ParseUtil.getJsonString(jsonItem, "name");
             item.amount = ParseUtil.getJsonInt(jsonItem, "amount");
+            item.amount = item.amount == 0 ? 1 : item.amount;
             if(jsonItem.has("lore")) {
                 for(JsonElement strElem : jsonItem.get("lore").getAsJsonArray()) {
                     item.lore.add(strElem.getAsString());
