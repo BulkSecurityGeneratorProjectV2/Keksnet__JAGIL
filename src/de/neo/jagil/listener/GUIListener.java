@@ -1,6 +1,5 @@
 package de.neo.jagil.listener;
 
-import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.exception.JAGILException;
 import de.neo.jagil.gui.GUI;
@@ -12,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class GUIListener implements Listener {

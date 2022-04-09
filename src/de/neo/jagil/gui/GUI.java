@@ -286,6 +286,7 @@ public abstract class GUI {
 	public GUI show() {
 		this.update();
 		if(this.p != null) {
+			register();
 			if(JAGIL.getPlugin(this.getClass().getName()) != null) {
 				getPlayer().getInventory();
 				Bukkit.getScheduler().runTask(JAGIL.getPlugin(this.getClass().getName()), () -> this.p.getPlayer().openInventory(this.inv));
@@ -293,9 +294,7 @@ public abstract class GUI {
 				this.p.getPlayer().openInventory(this.inv);
 			}
 			this.p.getPlayer().updateInventory();
-			Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> {
-				GUIManager.getInstance().lockIfNotLocked(getIdentifier());
-			}, 1L);
+			Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> GUIManager.getInstance().lockIfNotLocked(getIdentifier()), 1L);
 			return this;
 		}
 		throw new RuntimeException("Please use show(OfflinePlayer) for universal GUIs");
