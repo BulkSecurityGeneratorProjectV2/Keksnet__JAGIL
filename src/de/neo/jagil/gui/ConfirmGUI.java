@@ -71,7 +71,7 @@ public class ConfirmGUI extends GUI {
 	public boolean handle(InventoryClickEvent e) {
 		int slot = e.getSlot();
 		switch (slot) {
-			case 2 -> {
+			case 2: {
 				e.getWhoClicked().closeInventory();
 				if (this.handler == null && this.cmd_yes != null) {
 					((Player) e.getWhoClicked()).performCommand(this.cmd_yes);
@@ -79,7 +79,7 @@ public class ConfirmGUI extends GUI {
 					this.handler.handleYes((OfflinePlayer) e.getWhoClicked());
 				}
 			}
-			case 6 -> {
+			case 6: {
 				e.getWhoClicked().closeInventory();
 				if (this.handler == null && this.cmd_no != null) {
 					((Player) e.getWhoClicked()).performCommand(this.cmd_no);
@@ -87,7 +87,7 @@ public class ConfirmGUI extends GUI {
 					this.handler.handleNo((OfflinePlayer) e.getWhoClicked());
 				}
 			}
-			default -> {
+			default: {
 			}
 		}
 		return true;

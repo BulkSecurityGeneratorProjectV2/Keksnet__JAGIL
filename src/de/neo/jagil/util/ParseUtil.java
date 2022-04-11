@@ -2,6 +2,7 @@ package de.neo.jagil.util;
 
 import com.google.gson.JsonObject;
 import de.neo.jagil.annotation.Internal;
+import de.neo.jagil.gui.GUI;
 
 public class ParseUtil {
 
@@ -26,6 +27,15 @@ public class ParseUtil {
             }
         }
         return r.toString().trim();
+    }
+
+    @Internal
+    public static int getAutoSlotId(GUI.DataGui gui) {
+        for(int i = -1; i > -999; i--) {
+            if(gui.items.containsKey(i)) continue;
+            return i;
+        }
+        throw new RuntimeException("No free slot id found!");
     }
 
 }

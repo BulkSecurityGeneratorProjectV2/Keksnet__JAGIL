@@ -40,7 +40,11 @@ public class JsonGuiReader extends GuiReader {
             GUI.GuiItem item = new GUI.XmlHead();
 
             item.id = ParseUtil.getJsonString(jsonItem, "id");
-            item.slot = jsonItem.get("slot").getAsInt();
+            if(!item.id.isEmpty() && !jsonItem.has("slot")) {
+                item.slot = ParseUtil.getAutoSlotId(gui);
+            } else {
+                item.slot = jsonItem.get("slot").getAsInt();
+            }
             item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
             item.name = ParseUtil.getJsonString(jsonItem, "name");
             item.amount = ParseUtil.getJsonInt(jsonItem, "amount");

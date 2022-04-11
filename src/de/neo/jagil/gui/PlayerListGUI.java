@@ -1,6 +1,5 @@
 package de.neo.jagil.gui;
 
-import de.neo.jagil.util.ItemBuilder;
 import de.neo.jagil.util.ItemTool;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,6 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A GUI for displaying a list of players.
@@ -102,7 +102,7 @@ public class PlayerListGUI extends GUI {
     }
 
     public List<OfflinePlayer> getPlayerList() {
-        return new LinkedList<>(Bukkit.getOnlinePlayers().stream().toList());
+        return new LinkedList<>(Bukkit.getOnlinePlayers().stream().collect(Collectors.toList()));
     }
 
 
