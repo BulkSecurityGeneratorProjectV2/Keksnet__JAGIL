@@ -1,5 +1,5 @@
 # JAGIL
-Version: 3.2.5
+Version: 3.3.10
 
 just another generic inventory library (for Spigot)
 
