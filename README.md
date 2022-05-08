@@ -60,6 +60,13 @@ class.
 Take a look at the [wiki](https://github.com/Keksnet/JAGIL/wiki).
 _Wiki coming soon._
 
+## Planned Features for v4
+- Animations
+- Removal of compatibilitymode and other hacky "fixes"
+- more Json features
+- "codeless" features
+- Wiki (applies to v3 as well)
+
 If there are any questions please write me on Discord (Neo8#4608).
 
 Have Fun!
