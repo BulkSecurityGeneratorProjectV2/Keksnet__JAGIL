@@ -1,5 +1,6 @@
 package de.neo.jagil.gui;
 
+import de.neo.jagil.manager.GuiReaderManager;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -27,26 +28,30 @@ public class FunctionalGUI extends GUI {
     private final Function<GUI, Boolean> defaultCancel;
 
     protected FunctionalGUI(String xmlFile, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
+                            Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod,
+                            Consumer<GUI> handleDragLastMethod, Consumer<GUI> handleCloseMethod,
+                            Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
             throws XMLStreamException, IOException {
         this(Paths.get(xmlFile), fillMethod, handleMethod, handleLastMethod, handleDragMethod, handleDragLastMethod,
                 handleCloseMethod, cancelDefault, customConstructorCallback);
     }
 
-    protected FunctionalGUI(String xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
+    protected FunctionalGUI(String xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod,
+                            Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
+                            Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
+                            Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
+                            Consumer<GUI> customConstructorCallback)
             throws XMLStreamException, IOException {
         this(Paths.get(xmlFile), p, fillMethod, handleMethod, handleLastMethod, handleDragMethod, handleDragLastMethod,
                 handleCloseMethod, cancelDefault, customConstructorCallback);
     }
 
     protected FunctionalGUI(Path xmlFile, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
+                            Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod,
+                            Consumer<GUI> handleDragLastMethod, Consumer<GUI> handleCloseMethod,
+                            Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
             throws XMLStreamException, IOException {
-        super(xmlFile);
+        super(GuiReaderManager.getInstance().readFile(xmlFile));
         this.fill = fillMethod;
         this.handle = handleMethod;
         this.handleLater = handleLastMethod;
@@ -57,11 +62,13 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(Path xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
+    protected FunctionalGUI(Path xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod,
+                            Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
+                            Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
+                            Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
+                            Consumer<GUI> customConstructorCallback)
             throws XMLStreamException, IOException {
-        super(xmlFile, p);
+        super(GuiReaderManager.getInstance().readFile(xmlFile), p);
         this.fill = fillMethod;
         this.handle = handleMethod;
         this.handleLater = handleLastMethod;
@@ -73,8 +80,9 @@ public class FunctionalGUI extends GUI {
     }
 
     protected FunctionalGUI(String name, int size, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback) {
+                            Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod,
+                            Consumer<GUI> handleDragLastMethod, Consumer<GUI> handleCloseMethod,
+                            Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback) {
         super(name, size);
         this.fill = fillMethod;
         this.handle = handleMethod;
@@ -86,9 +94,11 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(String name, int size, OfflinePlayer p, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback) {
+    protected FunctionalGUI(String name, int size, OfflinePlayer p, Consumer<GUI> fillMethod,
+                            Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
+                            Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
+                            Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
+                            Consumer<GUI> customConstructorCallback) {
         super(name, size, p);
         this.fill = fillMethod;
         this.handle = handleMethod;
@@ -100,9 +110,11 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(String name, InventoryType type, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback) {
+    protected FunctionalGUI(String name, InventoryType type, Consumer<GUI> fillMethod,
+                            Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
+                            Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
+                            Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
+                            Consumer<GUI> customConstructorCallback) {
         super(name, type);
         this.fill = fillMethod;
         this.handle = handleMethod;
@@ -114,9 +126,11 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(String name, InventoryType type, OfflinePlayer p, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
-                          Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
-                          Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback) {
+    protected FunctionalGUI(String name, InventoryType type, OfflinePlayer p, Consumer<GUI> fillMethod,
+                            Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
+                            Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
+                            Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
+                            Consumer<GUI> customConstructorCallback) {
         super(name, type, p);
         this.fill = fillMethod;
         this.handle = handleMethod;
@@ -159,9 +173,8 @@ public class FunctionalGUI extends GUI {
     }
 
     @Override
-    public GUI handleLast(InventoryClickEvent e) {
+    public void handleLast(InventoryClickEvent e) {
         executeCallback(handleLater);
-        return this;
     }
 
     @Override
@@ -170,15 +183,13 @@ public class FunctionalGUI extends GUI {
     }
 
     @Override
-    public GUI handleDragLast(InventoryDragEvent e) {
+    public void handleDragLast(InventoryDragEvent e) {
         executeCallback(dragLater);
-        return this;
     }
 
     @Override
-    public GUI handleClose(InventoryCloseEvent e) {
+    public void handleClose(InventoryCloseEvent e) {
         executeCallback(close);
-        return this;
     }
 
     @Override

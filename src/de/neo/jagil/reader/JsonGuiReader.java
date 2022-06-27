@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.neo.jagil.gui.GUI;
+import de.neo.jagil.gui.GuiTypes;
 import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,8 +22,8 @@ public class JsonGuiReader extends GuiReader {
     }
 
     @Override
-    public GUI.DataGui read(Path guiFile) throws IOException {
-        GUI.DataGui gui = new GUI.DataGui();
+    public GuiTypes.DataGui read(Path guiFile) throws IOException {
+        GuiTypes.DataGui gui = new GuiTypes.DataGui();
 
         String jsonString = Files.readString(guiFile);
         JsonObject json = new Gson().fromJson(jsonString, JsonObject.class);
@@ -37,7 +38,7 @@ public class JsonGuiReader extends GuiReader {
 
         for(JsonElement elem : json.get("items").getAsJsonArray()) {
             JsonObject jsonItem = elem.getAsJsonObject();
-            GUI.GuiItem item = new GUI.XmlHead();
+            GuiTypes.GuiItem item = new GuiTypes.GuiItem();
 
             item.id = ParseUtil.getJsonString(jsonItem, "id");
             if(!item.id.isEmpty() && !jsonItem.has("slot")) {
@@ -58,7 +59,7 @@ public class JsonGuiReader extends GuiReader {
             if(jsonItem.has("enchantments")) {
                 for(JsonElement enchantElem : jsonItem.get("enchantments").getAsJsonArray()) {
                     JsonObject enchJson = enchantElem.getAsJsonObject();
-                    GUI.GuiEnchantment enchantment = new GUI.GuiEnchantment();
+                    GuiTypes.GuiEnchantment enchantment = new GuiTypes.GuiEnchantment();
                     enchantment.enchantment =
                             Arrays.stream(Enchantment.values())
                                     .filter(it -> enchJson.get("name").getAsString().equalsIgnoreCase(it.toString()))
@@ -69,7 +70,7 @@ public class JsonGuiReader extends GuiReader {
             }
 
             if(jsonItem.has("base64")) {
-                ((GUI.XmlHead)item).texture = ParseUtil.getJsonString(jsonItem, "base64");
+                item.texture = ParseUtil.getJsonString(jsonItem, "base64");
             }
 
             if(jsonItem.has("modelData")) {
@@ -81,7 +82,7 @@ public class JsonGuiReader extends GuiReader {
             if(jsonItem.has("fillTo")) {
                 int fillMax = jsonItem.get("fillTo").getAsInt();
                 for(int i = item.slot + 1; i <= fillMax; i++) {
-                    GUI.XmlHead item2 = new GUI.XmlHead((GUI.XmlHead)item);
+                    GuiTypes.GuiItem item2 = new GuiTypes.GuiItem(item);
                     item2.slot = i;
                     gui.items.put(i, item2);
                 }
@@ -94,13 +95,13 @@ public class JsonGuiReader extends GuiReader {
                         int from = fillJson.get("from").getAsInt();
                         int to = fillJson.get("to").getAsInt();
                         for(int i = from; i <= to; i++) {
-                            GUI.XmlHead item2 = new GUI.XmlHead((GUI.XmlHead)item);
+                            GuiTypes.GuiItem item2 = new GuiTypes.GuiItem(item);
                             item2.slot = i;
                             gui.items.put(i, item2);
                         }
                     }else if(fillElem.isJsonPrimitive()) {
                         int slot = fillElem.getAsInt();
-                        GUI.XmlHead item2 = new GUI.XmlHead((GUI.XmlHead)item);
+                        GuiTypes.GuiItem item2 = new GuiTypes.GuiItem(item);
                         item2.slot = slot;
                         gui.items.put(slot, item2);
                     }else {

@@ -1,6 +1,7 @@
 package de.neo.jagil.reader;
 
 import de.neo.jagil.gui.GUI;
+import de.neo.jagil.gui.GuiTypes;
 import de.neo.jagil.manager.GuiReaderManager;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public abstract class GuiReader {
         this.fileType = fileType.toLowerCase();
     }
 
-    public abstract GUI.DataGui read(Path guiFile) throws IOException;
+    public abstract GuiTypes.DataGui read(Path guiFile) throws IOException;
 
     public String getFileType() {
         return this.fileType;

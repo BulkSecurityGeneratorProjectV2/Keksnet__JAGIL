@@ -1,13 +1,19 @@
 package de.neo.jagil.manager;
 
 import de.neo.jagil.exception.JAGILException;
+import de.neo.jagil.gui.GUI;
+import de.neo.jagil.gui.GuiTypes;
 import de.neo.jagil.reader.GuiReader;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 
 public class GuiReaderManager {
 
-    private HashMap<String, GuiReader> readers;
+    private final HashMap<String, GuiReader> readers;
     private static GuiReaderManager instance;
 
     private GuiReaderManager() {
@@ -23,6 +29,19 @@ public class GuiReaderManager {
             throw new JAGILException("No reader for file type " + fileType + " registered!");
         }
         return readers.get(fileType);
+    }
+
+    /**
+     * Loads a full {@link GUI} from a file
+     *
+     * @param file the file to load from
+     * @return the {@link GuiTypes.DataGui}
+     */
+    public GuiTypes.DataGui readFile(Path file) throws IOException {
+        String[] fileName = file.toString().split("[.]");
+        GuiReader reader = GuiReaderManager.getInstance().getReader(fileName[fileName.length - 1].toLowerCase());
+
+        return reader.read(file);
     }
 
     public static GuiReaderManager getInstance() {

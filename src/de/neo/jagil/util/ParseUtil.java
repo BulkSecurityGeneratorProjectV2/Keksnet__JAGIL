@@ -3,6 +3,7 @@ package de.neo.jagil.util;
 import com.google.gson.JsonObject;
 import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.gui.GUI;
+import de.neo.jagil.gui.GuiTypes;
 
 public class ParseUtil {
 
@@ -30,7 +31,7 @@ public class ParseUtil {
     }
 
     @Internal
-    public static int getAutoSlotId(GUI.DataGui gui) {
+    public static int getAutoSlotId(GuiTypes.DataGui gui) {
         for(int i = -1; i > -999; i--) {
             if(gui.items.containsKey(i)) continue;
             return i;
