@@ -48,7 +48,7 @@ dependencies {
 ### How to use:
 And you have to put the following in your onEnable method:
 ```java
-JAGIL.init(this, compatibiltyMode);
+JAGIL.init(JavaPlugin);
 ```
 If you turn compatibilityMode on it will disable some features like save closing the inventory.
 
@@ -62,7 +62,7 @@ _Wiki coming soon._
 
 ## Planned Features for v4
 - Animations
-- Removal of compatibilitymode and other hacky "fixes"
+- ~~Removal of compatibilitymode and other hacky "fixes"~~
 - more Json features
 - "codeless" features
 - Wiki (applies to v3 as well)
