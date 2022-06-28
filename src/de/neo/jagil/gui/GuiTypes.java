@@ -27,6 +27,7 @@ public class GuiTypes {
             this.size = 0;
             this.animationMod = 0;
             this.items = new HashMap<>();
+            this.itemIdTable = new HashMap<>();
         }
 
         /**
@@ -36,6 +37,7 @@ public class GuiTypes {
          * @return the slot of the {@link ItemStack} with the given id
          */
         public int getSlot(String itemId) {
+            if(itemIdTable.isEmpty()) rebuildItemIdTable();
             return this.itemIdTable.getOrDefault(itemId, 999);
         }
 
@@ -60,6 +62,7 @@ public class GuiTypes {
          * @return the itemId of the {@link ItemStack} with the given slot
          */
         public String getItemId(int slot) {
+            if(itemIdTable.isEmpty()) rebuildItemIdTable();
             String itemId = "";
             for(Map.Entry<String, Integer> entry : this.itemIdTable.entrySet()) {
                 if(entry.getValue() == slot) {
@@ -70,11 +73,19 @@ public class GuiTypes {
             return itemId;
         }
 
+        public void rebuildItemIdTable() {
+            this.itemIdTable.clear();
+            for(Map.Entry<Integer, GuiItem> entry : this.items.entrySet()) {
+                this.itemIdTable.put(entry.getValue().id, entry.getKey());
+            }
+        }
+
         @Override
         public String toString() {
             return "DataGui{name=" + this.name + ", " +
                     "size=" + this.size + ", " +
-                    "items=" + this.items + "}";
+                    "items=" + this.items + "," +
+                    "itemIdTable=" + this.itemIdTable + "}";
         }
     }
 
