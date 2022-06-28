@@ -84,6 +84,8 @@ public class GUIListener implements Listener {
 				if(e.getInventory() != e.getPlayer().getInventory()) {
 					gui.handleClose(e);
 				}
+				Bukkit.getScheduler().cancelTask(gui.animationTaskId);
+				gui.animationTaskId = -1;
 			}
 			if(!GUIManager.getInstance().unlockIfLocked(identifier)) {
 				GUIManager.getInstance().unregister(identifier);

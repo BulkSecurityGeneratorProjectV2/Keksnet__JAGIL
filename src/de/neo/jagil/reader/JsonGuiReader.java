@@ -30,6 +30,7 @@ public class JsonGuiReader extends GuiReader {
 
         gui.name = ParseUtil.getJsonString(json, "name");
         gui.size = json.get("size").getAsInt();
+        gui.animationMod = json.get("animationTick").getAsInt();
 
         if(!json.has("items")) {
             Bukkit.getLogger().warning("[JAGIL] Empty GUI " + guiFile + ": no items section!");

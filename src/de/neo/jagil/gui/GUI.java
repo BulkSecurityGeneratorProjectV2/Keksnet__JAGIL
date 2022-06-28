@@ -19,6 +19,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 /**
@@ -37,6 +38,7 @@ public abstract class GUI {
 	private Inventory inv;
 	private GuiTypes.DataGui guiData;
 	protected HashMap<String, Integer> itemIds;
+	public int animationTaskId;
 
 	private long cooldown;
 	private long lastHandle;
@@ -227,6 +229,16 @@ public abstract class GUI {
 				getPlayer().openInventory(this.inv);
 			}
 			getPlayer().updateInventory();
+
+			AtomicInteger ticks = new AtomicInteger(0);
+
+			if(animationTaskId != -1) Bukkit.getScheduler().cancelTask(animationTaskId);
+
+			animationTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(JAGIL.loaderPlugin, () -> {
+				if(this.inv == null) return;
+				animate(ticks.incrementAndGet());
+			}, 0L, 1L);
+
 			Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> GUIManager.getInstance().lockIfNotLocked(getIdentifier()), 1L);
 			return this;
 		}
@@ -285,6 +297,7 @@ public abstract class GUI {
 		if(tick % guiData.animationMod != 0) return;
 		for(GuiTypes.GuiItem guiItem : guiData.items.values()) {
 			if(guiItem.slot < 0) continue;
+			if(guiItem.animationFrames.isEmpty()) continue;
 			ItemStack is = guiData.getItem(guiItem.animationFrames.get((int) (tick % guiItem.animationFrames.size())));
 			this.inv.setItem(guiItem.slot, is);
 		}
