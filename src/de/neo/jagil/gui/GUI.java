@@ -69,7 +69,7 @@ public abstract class GUI {
 	 *
 	 * @param gui the {@link GuiTypes.DataGui} class to load the GUI from.
 	 */
-	public GUI(GuiTypes.DataGui gui, OfflinePlayer p) throws IOException, XMLStreamException {
+	public GUI(GuiTypes.DataGui gui, OfflinePlayer p) {
 		this.guiData = gui;
 		this.name = gui.name;
 		this.size = gui.size;
