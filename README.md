@@ -66,7 +66,8 @@ _Wiki coming soon._
 - more Json features
 - "codeless" features
 - Wiki (applies to v3 as well)
-- Attributes
+- ~~Attributes~~
+- UI System
 - (Prebuild) UI Elements
 
 If there are any questions please write me on Discord (Neo8#4608).

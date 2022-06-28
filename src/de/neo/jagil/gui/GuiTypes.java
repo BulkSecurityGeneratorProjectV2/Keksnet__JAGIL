@@ -1,5 +1,6 @@
 package de.neo.jagil.gui;
 
+import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
 import de.neo.jagil.util.ItemTool;
@@ -87,6 +88,7 @@ public class GuiTypes {
         public HashSet<GuiEnchantment> enchantments;
         public int customModelData;
         public String texture;
+        public HashMap<String, JsonObject> attributes;
 
         public GuiItem() {
             this.id = "";
@@ -96,6 +98,7 @@ public class GuiTypes {
             this.lore = new ArrayList<>();
             this.enchantments = new HashSet<>();
             this.texture = "";
+            this.attributes = new HashMap<>();
         }
 
         public GuiItem(GuiItem item) {
@@ -108,6 +111,7 @@ public class GuiTypes {
             this.enchantments = new HashSet<>(item.enchantments);
             this.customModelData = item.customModelData;
             this.texture = "";
+            this.attributes = new HashMap<>(item.attributes);
         }
 
         public ItemStack toItem() {
@@ -149,7 +153,8 @@ public class GuiTypes {
                     "amount=" + this.amount + ", " +
                     "lore=" + this.lore + ", " +
                     "enchantments=" + this.enchantments + "," +
-                    "texture=" + this.texture + "}";
+                    "texture=" + this.texture + "," +
+                    "attributes=" + this.attributes + "}";
         }
     }
 

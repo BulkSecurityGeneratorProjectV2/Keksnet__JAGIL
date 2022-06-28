@@ -77,6 +77,13 @@ public class JsonGuiReader extends GuiReader {
                 item.customModelData = jsonItem.get("modelData").getAsInt();
             }
 
+            if(jsonItem.has("attributes")) {
+                for(JsonElement attrElem : jsonItem.get("attributes").getAsJsonArray()) {
+                    JsonObject attrJson = attrElem.getAsJsonObject();
+                    item.attributes.put(attrJson.get("name").getAsString(), attrJson.get("value").getAsJsonObject());
+                }
+            }
+
             gui.items.put(item.slot, item);
 
             if(jsonItem.has("fillTo")) {

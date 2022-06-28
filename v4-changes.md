@@ -1,5 +1,8 @@
 # Changes in v4
 
+## Attributes
+- Simple attributes using ``GuiItem.attributes``
+
 ## Other changes
 - Removed ``JAGIL.init(JavaPlugin, boolean)`` use ``JAGIL.init(JavaPlugin)`` instead.
 - The loader plugin has to inject itself into the plugin using ``JAGIL.loaderPlugin = JavaPlugin``.
