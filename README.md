@@ -1,5 +1,5 @@
 # JAGIL
-Version: 3.3.10
+Version: 4.0-alpha.2
 
 just another generic inventory library (for Spigot)
 
@@ -56,7 +56,7 @@ To create a new GUI you have to create a class that extends GUI.
 If you like to use functional programming you can use the GUIBuilder
 class.
 
-## Help! I do not now how to get started.
+## Help! I do not know how to get started.
 Take a look at the [wiki](https://github.com/Keksnet/JAGIL/wiki).
 _Wiki coming soon._
 
