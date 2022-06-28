@@ -1,5 +1,10 @@
 # Changes in v4
 
+## Animations
+- Animation frames (ItemStacks)
+- Json support
+- Manual animations (override ``GUI.animate(int)``)
+
 ## Attributes
 - Simple attributes using ``GuiItem.attributes``
 

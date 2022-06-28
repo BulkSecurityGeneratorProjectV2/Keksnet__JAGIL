@@ -2,12 +2,10 @@ package de.neo.jagil.gui;
 
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.annotation.Internal;
-import de.neo.jagil.annotation.NoCompatibilityMode;
 import de.neo.jagil.annotation.OptionalImplementation;
 import de.neo.jagil.annotation.UnstableFeature;
 import de.neo.jagil.manager.GUIManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -20,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -275,6 +272,22 @@ public abstract class GUI {
 		}
 		this.lastHandle = System.currentTimeMillis();
 		return handle(e);
+	}
+
+	/**
+	 * This method is called once a tick to animate the {@link GUI}.
+	 *
+	 * @param tick the current tick after the {@link GUI} was opened
+	 */
+	public void animate(long tick) {
+		if(guiData == null) return;
+		if(guiData.animationMod == 0) return;
+		if(tick % guiData.animationMod != 0) return;
+		for(GuiTypes.GuiItem guiItem : guiData.items.values()) {
+			if(guiItem.slot < 0) continue;
+			ItemStack is = guiData.getItem(guiItem.animationFrames.get((int) (tick % guiItem.animationFrames.size())));
+			this.inv.setItem(guiItem.slot, is);
+		}
 	}
 
 	/**

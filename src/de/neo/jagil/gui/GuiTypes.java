@@ -18,12 +18,14 @@ public class GuiTypes {
 
         public String name;
         public int size;
+        public long animationMod;
         public HashMap<Integer, GuiItem> items;
         public HashMap<String, Integer> itemIdTable;
 
         public DataGui() {
             this.name = "";
             this.size = 0;
+            this.animationMod = 0;
             this.items = new HashMap<>();
         }
 
@@ -89,6 +91,7 @@ public class GuiTypes {
         public int customModelData;
         public String texture;
         public HashMap<String, JsonObject> attributes;
+        public ArrayList<String> animationFrames;
 
         public GuiItem() {
             this.id = "";
@@ -99,6 +102,7 @@ public class GuiTypes {
             this.enchantments = new HashSet<>();
             this.texture = "";
             this.attributes = new HashMap<>();
+            this.animationFrames = new ArrayList<>();
         }
 
         public GuiItem(GuiItem item) {
@@ -112,6 +116,7 @@ public class GuiTypes {
             this.customModelData = item.customModelData;
             this.texture = "";
             this.attributes = new HashMap<>(item.attributes);
+            this.animationFrames = new ArrayList<>(item.animationFrames);
         }
 
         public ItemStack toItem() {
@@ -154,7 +159,8 @@ public class GuiTypes {
                     "lore=" + this.lore + ", " +
                     "enchantments=" + this.enchantments + "," +
                     "texture=" + this.texture + "," +
-                    "attributes=" + this.attributes + "}";
+                    "attributes=" + this.attributes + "," +
+                    "animationFrames=" + this.animationFrames + "}";
         }
     }
 

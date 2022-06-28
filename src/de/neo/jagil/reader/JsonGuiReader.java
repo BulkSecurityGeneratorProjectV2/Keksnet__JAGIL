@@ -77,6 +77,12 @@ public class JsonGuiReader extends GuiReader {
                 item.customModelData = jsonItem.get("modelData").getAsInt();
             }
 
+            if(jsonItem.has("animation")) {
+                for(JsonElement animElem : jsonItem.get("animation").getAsJsonArray()) {
+                    item.animationFrames.add(animElem.getAsString());
+                }
+            }
+
             if(jsonItem.has("attributes")) {
                 for(JsonElement attrElem : jsonItem.get("attributes").getAsJsonArray()) {
                     JsonObject attrJson = attrElem.getAsJsonObject();
