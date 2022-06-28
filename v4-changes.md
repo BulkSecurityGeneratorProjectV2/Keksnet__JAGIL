@@ -4,9 +4,11 @@
 - Animation frames (ItemStacks)
 - Json support
 - Manual animations (override ``GUI.animate(int)``)
+- ``animation`` attribute in json files
 
 ## Attributes
 - Simple attributes using ``GuiItem.attributes``
+- ``attributes`` attribute in json files
 
 ## Other changes
 - Removed ``JAGIL.init(JavaPlugin, boolean)`` use ``JAGIL.init(JavaPlugin)`` instead.
