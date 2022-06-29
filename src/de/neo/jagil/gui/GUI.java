@@ -15,8 +15,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -231,12 +229,13 @@ public abstract class GUI {
 			getPlayer().updateInventory();
 
 			AtomicInteger ticks = new AtomicInteger(0);
+			AtomicInteger lastItem = new AtomicInteger(0);
 
 			if(animationTaskId != -1) Bukkit.getScheduler().cancelTask(animationTaskId);
 
 			animationTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(JAGIL.loaderPlugin, () -> {
 				if(this.inv == null) return;
-				animate(ticks.incrementAndGet());
+				animate(ticks.getAndIncrement(), lastItem);
 			}, 0L, 1L);
 
 			Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> GUIManager.getInstance().lockIfNotLocked(getIdentifier()), 1L);
@@ -291,16 +290,21 @@ public abstract class GUI {
 	 *
 	 * @param tick the current tick after the {@link GUI} was opened
 	 */
-	public void animate(long tick) {
+	public void animate(long tick, AtomicInteger atomicLastItem) {
 		if(guiData == null) return;
 		if(guiData.animationMod == 0) return;
 		if(tick % guiData.animationMod != 0) return;
+		int lastItem = atomicLastItem.getAndIncrement();
 		for(GuiTypes.GuiItem guiItem : guiData.items.values()) {
 			if(guiItem.slot < 0) continue;
 			if(guiItem.animationFrames.isEmpty()) continue;
-			ItemStack is = guiData.getItem(guiItem.animationFrames.get((int) (tick % guiItem.animationFrames.size())));
+			ItemStack is = guiData.getItem(guiItem.animationFrames.get((lastItem + 1) % guiItem.animationFrames.size()));
+			System.out.println("Set " + guiItem.animationFrames.get((lastItem + 1) % guiItem.animationFrames.size())
+					+ " in " + guiItem.slot + " (" + (lastItem + 1) % guiItem.animationFrames.size() + "("
+					+ (lastItem + 1) + " % " + guiItem.animationFrames.size() + "))");
 			this.inv.setItem(guiItem.slot, is);
 		}
+		getPlayer().updateInventory();
 	}
 
 	/**
