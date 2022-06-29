@@ -28,8 +28,7 @@ public class GuiTypes {
         }
         Inventory inv = gui.getInventory();
         int slot = frame.position.toSlot();
-        inv.clear(slot);
-        if(frame.previousFrame != null) inv.clear(frame.previousFrame.position.toSlot());
+        if(frame.previousFrame != null && frame.shouldCleanUp) inv.clear(frame.previousFrame.position.toSlot());
         inv.setItem(slot, is);
     };
 
@@ -214,6 +213,7 @@ public class GuiTypes {
 
         public String itemId;
         public InventoryPosition position;
+        public boolean shouldCleanUp;
         public GuiAnimationFrame previousFrame;
         public BiConsumer<Long, Pair<GUI, GuiAnimationFrame>> animation;
 

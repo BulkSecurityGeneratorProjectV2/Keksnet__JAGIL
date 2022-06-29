@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.neo.jagil.gui.GUI;
 import de.neo.jagil.gui.GuiTypes;
+import de.neo.jagil.util.InventoryPosition;
 import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -86,12 +87,15 @@ public class JsonGuiReader extends GuiReader {
                 for(JsonElement animElem : jsonItem.get("animation").getAsJsonArray()) {
                     JsonObject animFrame = animElem.getAsJsonObject();
                     GuiTypes.GuiAnimationFrame frame = new GuiTypes.GuiAnimationFrame();
-                    frame.itemId = animFrame.get("itemId").getAsString();
-                    frame.position = ParseUtil.getJsonPosition(animFrame, "pos");
+                    frame.itemId = animFrame.has("itemId") ? animFrame.get("itemId").getAsString() : item.id;
+                    frame.position = animFrame.has("pos") ?
+                            ParseUtil.getJsonPosition(animFrame, "pos") : InventoryPosition.fromSlot(item.slot);
+                    frame.shouldCleanUp = !animFrame.has("cleanUp") || animFrame.get("cleanUp").getAsBoolean();
                     if(item.animationFrames.size() != 0)
                         frame.previousFrame = item.animationFrames.get(item.animationFrames.size() - 1);
                     item.animationFrames.add(frame);
                 }
+                item.animationFrames.get(0).previousFrame = item.animationFrames.get(item.animationFrames.size() - 1);
             }
 
             if(jsonItem.has("attributes")) {

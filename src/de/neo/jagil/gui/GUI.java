@@ -228,15 +228,17 @@ public abstract class GUI {
 			}
 			getPlayer().updateInventory();
 
-			AtomicInteger ticks = new AtomicInteger(0);
-			AtomicInteger lastItem = new AtomicInteger(0);
+			if(guiData.animationMod != 0) {
+				AtomicInteger ticks = new AtomicInteger(0);
+				AtomicInteger lastItem = new AtomicInteger(0);
 
-			if(animationTaskId != -1) Bukkit.getScheduler().cancelTask(animationTaskId);
+				if(animationTaskId != -1) Bukkit.getScheduler().cancelTask(animationTaskId);
 
-			animationTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(JAGIL.loaderPlugin, () -> {
-				if(this.inv == null) return;
-				animate(ticks.getAndIncrement(), lastItem);
-			}, 0L, 1L);
+				animationTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(JAGIL.loaderPlugin, () -> {
+					if(this.inv == null) return;
+					animate(ticks.getAndIncrement(), lastItem);
+				}, 0L, 1L);
+			}
 
 			Bukkit.getScheduler().runTaskLater(JAGIL.loaderPlugin, () -> GUIManager.getInstance().lockIfNotLocked(getIdentifier()), 1L);
 			return this;
@@ -296,6 +298,7 @@ public abstract class GUI {
 		if(tick % guiData.animationMod != 0) return;
 		int lastItem = atomicLastItem.getAndIncrement();
 		for(GuiTypes.GuiItem guiItem : guiData.items.values()) {
+			if(guiItem == null) continue;
 			if(guiItem.slot < 0) continue;
 			if(guiItem.animationFrames.isEmpty()) continue;
 			GuiTypes.GuiAnimationFrame frame = guiItem.animationFrames.get((lastItem + 1) % guiItem.animationFrames.size());
