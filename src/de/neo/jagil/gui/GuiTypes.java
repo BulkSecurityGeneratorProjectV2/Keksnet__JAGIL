@@ -2,18 +2,37 @@ package de.neo.jagil.gui;
 
 import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
-import de.neo.jagil.annotation.Internal;
+import de.neo.jagil.util.InventoryPosition;
 import de.neo.jagil.util.ItemTool;
+import de.neo.jagil.util.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class GuiTypes {
 
-    @Internal
+    public final static BiConsumer<Long, Pair<GUI, GuiAnimationFrame>> DEFAULT_ANIMATION = (tick, pair) -> {
+        GUI gui = pair.getKey();
+        GuiAnimationFrame frame = pair.getValue();
+        DataGui guiData = gui.getGuiData();
+        ItemStack is = guiData.getItem(frame.itemId);
+        if(is == null) {
+            Bukkit.getLogger().warning("[JAGIL] GUI " + gui.getName() + ": item " + frame.itemId + " not found!");
+            return;
+        }
+        Inventory inv = gui.getInventory();
+        int slot = frame.position.toSlot();
+        inv.clear(slot);
+        if(frame.previousFrame != null) inv.clear(frame.previousFrame.position.toSlot());
+        inv.setItem(slot, is);
+    };
+
     public static class DataGui {
 
         public String name;
@@ -89,7 +108,6 @@ public class GuiTypes {
         }
     }
 
-    @Internal
     public static class GuiItem {
 
         public String id;
@@ -102,7 +120,7 @@ public class GuiTypes {
         public int customModelData;
         public String texture;
         public HashMap<String, JsonObject> attributes;
-        public ArrayList<String> animationFrames;
+        public ArrayList<GuiAnimationFrame> animationFrames;
 
         public GuiItem() {
             this.id = "";
@@ -175,7 +193,6 @@ public class GuiTypes {
         }
     }
 
-    @Internal
     public static class GuiEnchantment {
 
         public GuiEnchantment() {
@@ -191,6 +208,25 @@ public class GuiTypes {
             return "GuiEnchantment{enchantment=" + this.enchantment + ", " +
                     "level=" + this.level + "}";
         }
+    }
+
+    public static class GuiAnimationFrame {
+
+        public String itemId;
+        public InventoryPosition position;
+        public GuiAnimationFrame previousFrame;
+        public BiConsumer<Long, Pair<GUI, GuiAnimationFrame>> animation;
+
+        public GuiAnimationFrame() {
+            this.itemId = "";
+            this.position = InventoryPosition.DEFAULT;
+            this.animation = DEFAULT_ANIMATION;
+        }
+
+        public void animate(long tick, GUI gui) {
+            this.animation.accept(tick, new Pair<>(gui, this));
+        }
+
     }
 
 }

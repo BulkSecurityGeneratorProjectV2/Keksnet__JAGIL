@@ -298,11 +298,8 @@ public abstract class GUI {
 		for(GuiTypes.GuiItem guiItem : guiData.items.values()) {
 			if(guiItem.slot < 0) continue;
 			if(guiItem.animationFrames.isEmpty()) continue;
-			ItemStack is = guiData.getItem(guiItem.animationFrames.get((lastItem + 1) % guiItem.animationFrames.size()));
-			System.out.println("Set " + guiItem.animationFrames.get((lastItem + 1) % guiItem.animationFrames.size())
-					+ " in " + guiItem.slot + " (" + (lastItem + 1) % guiItem.animationFrames.size() + "("
-					+ (lastItem + 1) + " % " + guiItem.animationFrames.size() + "))");
-			this.inv.setItem(guiItem.slot, is);
+			GuiTypes.GuiAnimationFrame frame = guiItem.animationFrames.get((lastItem + 1) % guiItem.animationFrames.size());
+			frame.animate(tick, this);
 		}
 		getPlayer().updateInventory();
 	}

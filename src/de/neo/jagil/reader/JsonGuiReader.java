@@ -42,10 +42,14 @@ public class JsonGuiReader extends GuiReader {
             GuiTypes.GuiItem item = new GuiTypes.GuiItem();
 
             item.id = ParseUtil.getJsonString(jsonItem, "id");
-            if(!item.id.isEmpty() && !jsonItem.has("slot")) {
-                item.slot = ParseUtil.getAutoSlotId(gui);
-            } else {
-                item.slot = jsonItem.get("slot").getAsInt();
+            if(jsonItem.has("pos")) {
+                item.slot = ParseUtil.getJsonPosition(jsonItem, "pos").toSlot();
+            }else {
+                if(!item.id.isEmpty() && !jsonItem.has("slot")) {
+                    item.slot = ParseUtil.getAutoSlotId(gui);
+                } else {
+                    item.slot = jsonItem.get("slot").getAsInt();
+                }
             }
             item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
             item.name = ParseUtil.getJsonString(jsonItem, "name");
@@ -80,7 +84,13 @@ public class JsonGuiReader extends GuiReader {
 
             if(jsonItem.has("animation")) {
                 for(JsonElement animElem : jsonItem.get("animation").getAsJsonArray()) {
-                    item.animationFrames.add(animElem.getAsString());
+                    JsonObject animFrame = animElem.getAsJsonObject();
+                    GuiTypes.GuiAnimationFrame frame = new GuiTypes.GuiAnimationFrame();
+                    frame.itemId = animFrame.get("itemId").getAsString();
+                    frame.position = ParseUtil.getJsonPosition(animFrame, "pos");
+                    if(item.animationFrames.size() != 0)
+                        frame.previousFrame = item.animationFrames.get(item.animationFrames.size() - 1);
+                    item.animationFrames.add(frame);
                 }
             }
 

@@ -39,4 +39,13 @@ public class ParseUtil {
         throw new RuntimeException("No free slot id found!");
     }
 
+    @Internal
+    public static InventoryPosition getJsonPosition(JsonObject frame, String key) {
+        if(!frame.has(key)) return InventoryPosition.DEFAULT;
+        JsonObject json = frame.get(key).getAsJsonObject();
+        if(!json.has("x")) return InventoryPosition.DEFAULT;
+        if(!json.has("y")) return InventoryPosition.DEFAULT;
+        return new InventoryPosition(json.get("x").getAsInt(), json.get("y").getAsInt());
+    }
+
 }

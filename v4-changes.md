@@ -3,8 +3,9 @@
 ## Animations
 - Animation frames (ItemStacks)
 - Json support
-- Manual animations (override ``GUI.animate(int)``)
+- Manual animations (set ``GuiAnimation.animation``)
 - ``animation`` attribute in json files
+- Items can be moved
 
 ## Attributes
 - Simple attributes using ``GuiItem.attributes``
@@ -21,3 +22,4 @@
 - Moved id based methods into the GUI class.
 - Added a method to handle a GUI on cooldown.
 - DataGUI based GUIs are filled in the ``GUI.fill()`` method. Make sure to call it when you override it.
+- Json supports ``position`` in addition to ``slot``
