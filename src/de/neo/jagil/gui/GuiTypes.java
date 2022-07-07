@@ -1,5 +1,6 @@
 package de.neo.jagil.gui;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.util.InventoryPosition;
@@ -118,7 +119,7 @@ public class GuiTypes {
         public HashSet<GuiEnchantment> enchantments;
         public int customModelData;
         public String texture;
-        public HashMap<String, JsonObject> attributes;
+        public HashMap<String, JsonElement> attributes;
         public ArrayList<GuiAnimationFrame> animationFrames;
 
         public GuiItem() {

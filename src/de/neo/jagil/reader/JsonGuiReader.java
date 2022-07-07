@@ -101,7 +101,7 @@ public class JsonGuiReader extends GuiReader {
             if(jsonItem.has("attributes")) {
                 for(JsonElement attrElem : jsonItem.get("attributes").getAsJsonArray()) {
                     JsonObject attrJson = attrElem.getAsJsonObject();
-                    item.attributes.put(attrJson.get("name").getAsString(), attrJson.get("value").getAsJsonObject());
+                    item.attributes.put(attrJson.get("name").getAsString(), attrJson.get("value"));
                 }
             }
 
