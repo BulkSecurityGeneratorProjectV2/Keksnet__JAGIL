@@ -11,6 +11,10 @@
 - Simple attributes using ``GuiItem.attributes``
 - ``attributes`` attribute in json files
 
+## UISystem
+- Added UISystem Interfaces
+- Added Gui Implementation
+
 ## Other changes
 - Removed ``JAGIL.init(JavaPlugin, boolean)`` use ``JAGIL.init(JavaPlugin)`` instead.
 - The loader plugin has to inject itself into the plugin using ``JAGIL.loaderPlugin = JavaPlugin``.

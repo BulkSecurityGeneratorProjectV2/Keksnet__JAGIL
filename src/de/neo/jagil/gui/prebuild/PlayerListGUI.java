@@ -1,5 +1,6 @@
-package de.neo.jagil.gui;
+package de.neo.jagil.gui.prebuild;
 
+import de.neo.jagil.gui.GUI;
 import de.neo.jagil.util.ItemTool;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

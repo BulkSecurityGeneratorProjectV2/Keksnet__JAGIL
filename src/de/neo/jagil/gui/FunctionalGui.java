@@ -17,7 +17,7 @@ import java.util.function.Function;
 /**
  * Provides a GUI implementation for functional programming and with lambda support.
  */
-public class FunctionalGUI extends GUI {
+public class FunctionalGui extends GUI {
 
     private final Consumer<GUI> fill;
     private final Function<GUI, Boolean> handle;
@@ -27,7 +27,7 @@ public class FunctionalGUI extends GUI {
     private final Consumer<GUI> close;
     private final Function<GUI, Boolean> defaultCancel;
 
-    protected FunctionalGUI(String xmlFile, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
+    protected FunctionalGui(String xmlFile, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
                             Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod,
                             Consumer<GUI> handleDragLastMethod, Consumer<GUI> handleCloseMethod,
                             Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
@@ -36,7 +36,7 @@ public class FunctionalGUI extends GUI {
                 handleCloseMethod, cancelDefault, customConstructorCallback);
     }
 
-    protected FunctionalGUI(String xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod,
+    protected FunctionalGui(String xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod,
                             Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
                             Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
                             Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
@@ -46,7 +46,7 @@ public class FunctionalGUI extends GUI {
                 handleCloseMethod, cancelDefault, customConstructorCallback);
     }
 
-    protected FunctionalGUI(Path xmlFile, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
+    protected FunctionalGui(Path xmlFile, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
                             Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod,
                             Consumer<GUI> handleDragLastMethod, Consumer<GUI> handleCloseMethod,
                             Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback)
@@ -62,7 +62,7 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(Path xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod,
+    protected FunctionalGui(Path xmlFile, OfflinePlayer p, Consumer<GUI> fillMethod,
                             Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
                             Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
                             Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
@@ -79,7 +79,7 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(String name, int size, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
+    protected FunctionalGui(String name, int size, Consumer<GUI> fillMethod, Function<GUI, Boolean> handleMethod,
                             Consumer<GUI> handleLastMethod, Function<GUI, Boolean> handleDragMethod,
                             Consumer<GUI> handleDragLastMethod, Consumer<GUI> handleCloseMethod,
                             Function<GUI, Boolean> cancelDefault, Consumer<GUI> customConstructorCallback) {
@@ -94,7 +94,7 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(String name, int size, OfflinePlayer p, Consumer<GUI> fillMethod,
+    protected FunctionalGui(String name, int size, OfflinePlayer p, Consumer<GUI> fillMethod,
                             Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
                             Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
                             Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
@@ -110,7 +110,7 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(String name, InventoryType type, Consumer<GUI> fillMethod,
+    protected FunctionalGui(String name, InventoryType type, Consumer<GUI> fillMethod,
                             Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
                             Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
                             Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,
@@ -126,7 +126,7 @@ public class FunctionalGUI extends GUI {
         executeCallback(customConstructorCallback);
     }
 
-    protected FunctionalGUI(String name, InventoryType type, OfflinePlayer p, Consumer<GUI> fillMethod,
+    protected FunctionalGui(String name, InventoryType type, OfflinePlayer p, Consumer<GUI> fillMethod,
                             Function<GUI, Boolean> handleMethod, Consumer<GUI> handleLastMethod,
                             Function<GUI, Boolean> handleDragMethod, Consumer<GUI> handleDragLastMethod,
                             Consumer<GUI> handleCloseMethod, Function<GUI, Boolean> cancelDefault,

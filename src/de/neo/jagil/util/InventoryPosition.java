@@ -1,5 +1,7 @@
 package de.neo.jagil.util;
 
+import java.awt.*;
+
 public class InventoryPosition {
 
     public int x;
@@ -41,6 +43,10 @@ public class InventoryPosition {
 
     public int toSlot() {
         return y * 9 + x;
+    }
+
+    public Point toPoint() {
+        return new Point(x, y);
     }
 
     public static InventoryPosition fromSlot(int slot) {

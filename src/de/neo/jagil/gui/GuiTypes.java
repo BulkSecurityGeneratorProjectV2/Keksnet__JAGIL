@@ -3,6 +3,7 @@ package de.neo.jagil.gui;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
+import de.neo.jagil.ui.components.UIComponent;
 import de.neo.jagil.util.InventoryPosition;
 import de.neo.jagil.util.ItemTool;
 import de.neo.jagil.util.Pair;
@@ -39,6 +40,7 @@ public class GuiTypes {
         public int size;
         public long animationMod;
         public HashMap<Integer, GuiItem> items;
+        public HashMap<String, UIComponent> ui;
         public HashMap<String, Integer> itemIdTable;
 
         public DataGui() {
@@ -46,7 +48,18 @@ public class GuiTypes {
             this.size = 0;
             this.animationMod = 0;
             this.items = new HashMap<>();
+            this.ui = new HashMap<>();
             this.itemIdTable = new HashMap<>();
+        }
+
+        /**
+         * This will merge the given gui data into this gui data.
+         * Any items that are already in this gui data will be overwritten.
+         *
+         * @param other the gui data to merge into this gui data
+         */
+        public void merge(DataGui other) {
+            this.items.putAll(other.items);
         }
 
         /**

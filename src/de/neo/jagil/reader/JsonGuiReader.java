@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.neo.jagil.gui.GUI;
 import de.neo.jagil.gui.GuiTypes;
+import de.neo.jagil.ui.components.UIComponent;
 import de.neo.jagil.util.InventoryPosition;
 import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Bukkit;
@@ -12,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ public class JsonGuiReader extends GuiReader {
     }
 
     @Override
-    public GuiTypes.DataGui read(Path guiFile) throws IOException {
+    public GuiTypes.DataGui read(Path guiFile) throws IOException, RuntimeException {
         GuiTypes.DataGui gui = new GuiTypes.DataGui();
 
         String jsonString = Files.readString(guiFile);
@@ -33,11 +35,32 @@ public class JsonGuiReader extends GuiReader {
         gui.size = json.get("size").getAsInt();
         gui.animationMod = json.get("animationTick").getAsInt();
 
-        if(!json.has("items")) {
+        if (json.has("items")) {
+            parseItems(gui, json, guiFile);
+        }else if (json.has("ui")) {
+            try {
+                parseUI(gui, json, guiFile);
+            }catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }else {
             Bukkit.getLogger().warning("[JAGIL] Empty GUI " + guiFile + ": no items section!");
             return gui;
         }
 
+        return gui;
+    }
+
+    public void parseUI(GuiTypes.DataGui gui, JsonObject json, Path guiFile)
+            throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        for (JsonElement elem : json.get("ui").getAsJsonArray()) {
+            JsonObject jsonUi = elem.getAsJsonObject();
+
+            UIComponent component = ParseUtil.getUIComponent(jsonUi.get("type").getAsString(), jsonUi);
+        }
+    }
+
+    public void parseItems(GuiTypes.DataGui gui, JsonObject json, Path guiFile) {
         for(JsonElement elem : json.get("items").getAsJsonArray()) {
             JsonObject jsonItem = elem.getAsJsonObject();
             GuiTypes.GuiItem item = new GuiTypes.GuiItem();
@@ -138,8 +161,6 @@ public class JsonGuiReader extends GuiReader {
                 }
             }
         }
-
-        return gui;
     }
 
     @Override
