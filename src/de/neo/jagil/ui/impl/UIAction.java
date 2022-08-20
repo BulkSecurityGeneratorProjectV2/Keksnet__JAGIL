@@ -4,7 +4,7 @@ import org.bukkit.event.inventory.ClickType;
 
 import java.awt.*;
 
-public class UIClick<T> {
+public class UIAction<T> {
 
     private final Class<T> uiType;
 
@@ -12,7 +12,7 @@ public class UIClick<T> {
 
     private final ClickType clickType;
 
-    public UIClick(Class<T> uiType, Point click, ClickType clickType) {
+    public UIAction(Class<T> uiType, Point click, ClickType clickType) {
         this.uiType = uiType;
         this.click = click;
         this.clickType = clickType;
