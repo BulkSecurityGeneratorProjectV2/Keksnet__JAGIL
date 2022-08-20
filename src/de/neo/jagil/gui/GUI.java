@@ -6,11 +6,10 @@ import de.neo.jagil.annotation.OptionalImplementation;
 import de.neo.jagil.annotation.UnstableFeature;
 import de.neo.jagil.manager.GUIManager;
 import de.neo.jagil.ui.components.Clickable;
-import de.neo.jagil.ui.components.UIComponent;
 import de.neo.jagil.ui.UIRenderPlainProvider;
 import de.neo.jagil.ui.UISystem;
 import de.neo.jagil.ui.impl.GuiUISystem;
-import de.neo.jagil.ui.impl.UIClick;
+import de.neo.jagil.ui.impl.UIAction;
 import de.neo.jagil.util.InventoryPosition;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -337,7 +336,7 @@ public class GUI {
 		Point p = InventoryPosition.fromSlot(e.getSlot()).toPoint();
 		Clickable component = getUiSystem().getClickedComponent(p);
 		if (component == null) return isCancelledByDefault();
-		UIClick<GuiTypes.DataGui> click = new UIClick<>(GuiTypes.DataGui.class, p, e.getClick());
+		UIAction<GuiTypes.DataGui> click = new UIAction<>(GuiTypes.DataGui.class, p, e.getClick());
 		component.click(click);
 		return true;
 	}
