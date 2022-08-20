@@ -6,6 +6,8 @@ import java.awt.*;
 
 public interface UIComponent {
 
+    String getId();
+
     Point getPosition();
 
     Dimension getSize();
@@ -15,7 +17,5 @@ public interface UIComponent {
     int getPriority();
 
     void render(UIRenderPlainProvider<?> renderPlain);
-
-    String getId();
 
 }

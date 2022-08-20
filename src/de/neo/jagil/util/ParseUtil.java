@@ -2,11 +2,11 @@ package de.neo.jagil.util;
 
 import com.google.gson.JsonObject;
 import de.neo.jagil.annotation.Internal;
-import de.neo.jagil.gui.GUI;
 import de.neo.jagil.gui.GuiTypes;
 import de.neo.jagil.ui.components.JsonParsable;
 import de.neo.jagil.ui.components.UIComponent;
 
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class ParseUtil {
@@ -51,6 +51,25 @@ public class ParseUtil {
         int y = json.has("y") ? json.get("y").getAsInt() : 0;
         return new InventoryPosition(x, y);
     }
+
+    @Internal
+    public static Point getPosition(JsonObject frame, String key) {
+        if(!frame.has(key)) return new Point(0, 0);
+        JsonObject json = frame.get(key).getAsJsonObject();
+        int x = json.has("x") ? json.get("x").getAsInt() : 0;
+        int y = json.has("y") ? json.get("y").getAsInt() : 0;
+        return new Point(x, y);
+    }
+
+    @Internal
+    public static Dimension getSize(JsonObject frame, String key) {
+        if(!frame.has(key)) return new Dimension(0, 0);
+        JsonObject json = frame.get(key).getAsJsonObject();
+        int x = json.has("width") ? json.get("width").getAsInt() : 0;
+        int y = json.has("height") ? json.get("height").getAsInt() : 0;
+        return new Dimension(x, y);
+    }
+
 
     @Internal
     public static <T extends UIComponent & JsonParsable> T getUIComponent(String type, JsonObject json)
