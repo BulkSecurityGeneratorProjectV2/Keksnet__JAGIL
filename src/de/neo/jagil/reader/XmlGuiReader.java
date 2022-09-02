@@ -1,6 +1,5 @@
 package de.neo.jagil.reader;
 
-import de.neo.jagil.gui.GUI;
 import de.neo.jagil.gui.GuiTypes;
 import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Material;
@@ -19,7 +18,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-public class XmlGuiReader extends GuiReader {
+/**
+ * This class implements the {@link GuiReader} for xml.
+ * It is deprecated and does not support {@link #parseItem(GuiTypes.DataGui, Object)} and {@link #parseItem(GuiTypes.DataGui, Object)}
+ * Removal planned for v5. Convert your existing xml files to json using /convert xml json (JAGIL-Loader only)
+ *
+ * @deprecated use {@link JsonGuiReader} instead. marked as for removal in v5.
+ */
+@Deprecated(forRemoval = true)
+public class XmlGuiReader extends GuiReader<Object> {
 
     public XmlGuiReader() {
         super("xml");
@@ -139,6 +146,16 @@ public class XmlGuiReader extends GuiReader {
             throw new IOException(e);
         }
         return gui;
+    }
+
+    @Override
+    public void parseItem(GuiTypes.DataGui gui, Object itemObject) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not supported by XmlGuiReader");
+    }
+
+    @Override
+    public void parseUIComponent(GuiTypes.DataGui gui, Object uiComponentObject) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not supported by XmlGuiReader");
     }
 
     @Override

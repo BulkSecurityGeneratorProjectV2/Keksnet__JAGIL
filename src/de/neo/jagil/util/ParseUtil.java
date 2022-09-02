@@ -18,6 +18,13 @@ public class ParseUtil {
     }
 
     @Internal
+    public static String getJsonStringOrNull(JsonObject json, String key) {
+        String jsonString = getJsonString(json, key);
+        if (jsonString.isEmpty()) return null;
+        return jsonString;
+    }
+
+    @Internal
     public static int getJsonInt(JsonObject json, String key) {
         if(!json.has(key)) return 0;
         return json.get(key).getAsInt();

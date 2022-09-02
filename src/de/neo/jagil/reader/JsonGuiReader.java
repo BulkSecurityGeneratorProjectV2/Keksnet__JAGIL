@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-public class JsonGuiReader extends GuiReader {
+public class JsonGuiReader extends GuiReader<JsonObject> {
 
     public JsonGuiReader() {
         super("json");
@@ -35,10 +35,10 @@ public class JsonGuiReader extends GuiReader {
         gui.animationMod = json.get("animationTick").getAsInt();
 
         if (json.has("items")) {
-            parseItems(gui, json, guiFile);
+            parseItems(gui, json);
         }else if (json.has("ui")) {
             try {
-                parseUI(gui, json, guiFile);
+                parseUI(gui, json);
             }catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -50,7 +50,7 @@ public class JsonGuiReader extends GuiReader {
         return gui;
     }
 
-    // TODO: Override
+    @Override
     public void parseItem(GuiTypes.DataGui gui, JsonObject json) {
         JsonObject jsonItem = json.getAsJsonObject();
         GuiTypes.GuiItem item = new GuiTypes.GuiItem();
@@ -152,18 +152,21 @@ public class JsonGuiReader extends GuiReader {
         }
     }
 
-    public void parseUI(GuiTypes.DataGui gui, JsonObject json, Path guiFile)
-            throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        for (JsonElement elem : json.get("ui").getAsJsonArray()) {
-            JsonObject jsonUi = elem.getAsJsonObject();
+    @Override
+    public void parseUIComponent(GuiTypes.DataGui gui, JsonObject jsonUi) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        UIComponent component = ParseUtil.getUIComponent(jsonUi.get("type").getAsString(), jsonUi);
+        gui.ui.put(component.getId(), component);
+    }
 
-            UIComponent component = ParseUtil.getUIComponent(jsonUi.get("type").getAsString(), jsonUi);
+    public void parseUI(GuiTypes.DataGui gui, JsonObject json) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        for (JsonElement elem : json.get("ui").getAsJsonArray()) {
+            parseUIComponent(gui, elem.getAsJsonObject());
         }
     }
 
-    public void parseItems(GuiTypes.DataGui gui, JsonObject json, Path guiFile) {
+    public void parseItems(GuiTypes.DataGui gui, JsonObject json) {
         for(JsonElement elem : json.get("items").getAsJsonArray()) {
-
+            parseItem(gui, elem.getAsJsonObject());
         }
     }
 
