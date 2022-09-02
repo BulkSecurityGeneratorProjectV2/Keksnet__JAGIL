@@ -13,18 +13,18 @@ import java.util.HashMap;
 
 public class GuiReaderManager {
 
-    private final HashMap<String, GuiReader> readers;
+    private final HashMap<String, GuiReader<?>> readers;
     private static GuiReaderManager instance;
 
     private GuiReaderManager() {
         readers = new HashMap<>();
     }
 
-    public void register(GuiReader reader) {
+    public void register(GuiReader<?> reader) {
         readers.put(reader.getFileType(), reader);
     }
 
-    public GuiReader getReader(String fileType) {
+    public GuiReader<?> getReader(String fileType) {
         if(!readers.containsKey(fileType)) {
             throw new JAGILException("No reader for file type " + fileType + " registered!");
         }
@@ -39,8 +39,7 @@ public class GuiReaderManager {
      */
     public GuiTypes.DataGui readFile(Path file) throws IOException {
         String[] fileName = file.toString().split("[.]");
-        GuiReader reader = GuiReaderManager.getInstance().getReader(fileName[fileName.length - 1].toLowerCase());
-
+        GuiReader<?> reader = GuiReaderManager.getInstance().getReader(fileName[fileName.length - 1].toLowerCase());
         return reader.read(file);
     }
 
