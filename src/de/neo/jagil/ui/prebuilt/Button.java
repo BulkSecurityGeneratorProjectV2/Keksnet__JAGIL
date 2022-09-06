@@ -7,7 +7,7 @@ import de.neo.jagil.ui.components.Clickable;
 import de.neo.jagil.ui.components.JsonParsable;
 import de.neo.jagil.ui.components.UIComponent;
 import de.neo.jagil.ui.impl.UIAction;
-import de.neo.jagil.util.InventoryPosition;
+import de.neo.jagil.util.InventoryPositionUtil;
 import de.neo.jagil.util.ParseUtil;
 import org.bukkit.Material;
 
@@ -76,41 +76,25 @@ public class Button implements UIComponent, Clickable, JsonParsable {
         Object renderPlain = renderPlainProvider.getRenderPlain();
         if (renderPlain instanceof GuiTypes.DataGui) {
             GuiTypes.DataGui gui = (GuiTypes.DataGui) renderPlain;
-            InventoryPosition slot = new InventoryPosition(position.x, position.y);
-            // TODO: Render button
-            if (size.width >= 3 && size.height >= 3 && border) {
-                // TODO: Render border
-                GuiTypes.GuiItem borderItem = new GuiTypes.GuiItem();
-                borderItem.material = borderMaterial;
-                for (int i = 0; i < size.width; i++) {
-                    GuiTypes.GuiItem copy = new GuiTypes.GuiItem(borderItem);
-                    copy.slot = slot.toSlot();
-                    gui.items.put(slot.toSlot(), copy);
-                    slot.move(1, 0);
-                }
-                slot.move(-1, 0);
-                for (int i = 0; i < size.height; i++) {
-                    GuiTypes.GuiItem copy = new GuiTypes.GuiItem(borderItem);
-                    copy.slot = slot.toSlot();
-                    gui.items.put(slot.toSlot(), copy);
-                    slot.move(0, 1);
-                }
-                slot.move(0, -1);
-                for (int i = 0; i < size.width; i++) {
-                    GuiTypes.GuiItem copy = new GuiTypes.GuiItem(borderItem);
-                    copy.slot = slot.toSlot();
-                    gui.items.put(slot.toSlot(), copy);
-                    slot.move(-1, 0);
-                }
-                slot.move(1, 0);
-                for (int i = 0; i < size.height; i++) {
-                    GuiTypes.GuiItem copy = new GuiTypes.GuiItem(borderItem);
-                    copy.slot = slot.toSlot();
-                    gui.items.put(slot.toSlot(), copy);
-                    slot.move(0, -1);
+            boolean renderBorder = size.width >= 3 && size.height >= 3 && border;
+            // Render inner button
+            GuiTypes.GuiItem innerItem = new GuiTypes.GuiItem();
+            innerItem.material = material;
+            for (int i = 0; i < size.height; i++) {
+                for (int j = 0; j < size.width; j++) {
+                    GuiTypes.GuiItem copy = new GuiTypes.GuiItem(innerItem);
+                    int slot = InventoryPositionUtil.toSlot(j, i);
+                    copy.slot = slot;
+                    if (renderBorder) {
+                        if ((i == 0 || i == size.height) && (j == 0 || j == size.width)) {
+                            // Render button
+                            copy.material = borderMaterial;
+                            continue;
+                        }
+                    }
+                    gui.items.put(slot, copy);
                 }
             }
-            slot.set(position.x, position.y);
         }
     }
 
