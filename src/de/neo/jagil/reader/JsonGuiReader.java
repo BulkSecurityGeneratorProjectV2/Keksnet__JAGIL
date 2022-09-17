@@ -32,7 +32,7 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
 
         gui.name = ParseUtil.getJsonString(json, "name");
         gui.size = json.get("size").getAsInt();
-        gui.animationMod = json.get("animationTick").getAsInt();
+        gui.animationMod = ParseUtil.getJsonInt(json, "animationTick");
 
         if (json.has("items")) {
             parseItems(gui, json);
@@ -158,12 +158,10 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
     public void parseUIComponent(GuiTypes.DataGui gui, JsonObject jsonUi) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         UIComponent component = ParseUtil.getUIComponent(jsonUi.get("type").getAsString(), jsonUi);
         gui.ui.put(component.getId(), component);
-        System.out.println("UI00: " + gui.ui);
     }
 
     public void parseUI(GuiTypes.DataGui gui, JsonObject json) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         for (JsonElement elem : json.get("ui").getAsJsonArray()) {
-            System.out.println("ARR00: " + elem);
             parseUIComponent(gui, elem.getAsJsonObject());
         }
     }
