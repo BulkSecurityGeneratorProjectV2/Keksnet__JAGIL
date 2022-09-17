@@ -282,10 +282,22 @@ public class GUI {
 	 * Fills this {@link GUI}
 	 */
 	public void fill() {
+		guiData.ui
+				.values()
+				.stream()
+				.filter(it -> !getUiSystem().hasComponent(it.getId()))
+				.forEach(getUiSystem()::addComponent);
 		getUiSystem().render();
 		GuiTypes.DataGui data = ((UIRenderPlainProvider<GuiTypes.DataGui>) getUiSystem().getRenderProvider()).getRenderPlain();
 		if (guiData != null) {
+			data.name = guiData.name;
+			data.size = guiData.size;
+			data.animationMod = guiData.animationMod;
 			data.merge(guiData);
+		}else {
+			data.name = getName();
+			data.size = getSize();
+			data.animationMod = 0;
 		}
 		guiData = data;
 		for(GuiTypes.GuiItem guiItem : guiData.items.values()) {
@@ -336,7 +348,7 @@ public class GUI {
 		Point p = InventoryPosition.fromSlot(e.getSlot()).toPoint();
 		Clickable component = getUiSystem().getClickedComponent(p);
 		if (component == null) return isCancelledByDefault();
-		UIAction<GuiTypes.DataGui> click = new UIAction<>(GuiTypes.DataGui.class, p, e.getClick());
+		UIAction<GuiTypes.DataGui> click = new UIAction<>(e.getWhoClicked(), GuiTypes.DataGui.class, p, e.getClick());
 		component.click(click);
 		return true;
 	}
