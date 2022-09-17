@@ -80,16 +80,16 @@ public class Button implements UIComponent, Clickable, JsonParsable {
             // Render inner button
             GuiTypes.GuiItem innerItem = new GuiTypes.GuiItem();
             innerItem.material = material;
+            innerItem.amount = 1;
             for (int i = 0; i < size.height; i++) {
                 for (int j = 0; j < size.width; j++) {
                     GuiTypes.GuiItem copy = new GuiTypes.GuiItem(innerItem);
                     int slot = InventoryPositionUtil.toSlot(j, i);
                     copy.slot = slot;
                     if (renderBorder) {
-                        if ((i == 0 || i == size.height) && (j == 0 || j == size.width)) {
+                        if (i == 0 || i == size.height - 1 || j == 0 || j == size.width - 1) {
                             // Render button
                             copy.material = borderMaterial;
-                            continue;
                         }
                     }
                     gui.items.put(slot, copy);
@@ -100,5 +100,6 @@ public class Button implements UIComponent, Clickable, JsonParsable {
 
     @Override
     public void click(UIAction<?> click) {
+        click.getEntity().sendMessage("Button clicked!");
     }
 }
