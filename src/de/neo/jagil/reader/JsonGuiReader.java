@@ -118,7 +118,9 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             }
         }
 
-        gui.items.put(item.slot, item);
+        if(!jsonItem.has("fill")) {
+            gui.items.put(item.slot, item);
+        }
 
         if(jsonItem.has("fillTo")) {
             int fillMax = jsonItem.get("fillTo").getAsInt();
@@ -156,10 +158,12 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
     public void parseUIComponent(GuiTypes.DataGui gui, JsonObject jsonUi) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         UIComponent component = ParseUtil.getUIComponent(jsonUi.get("type").getAsString(), jsonUi);
         gui.ui.put(component.getId(), component);
+        System.out.println("UI00: " + gui.ui);
     }
 
     public void parseUI(GuiTypes.DataGui gui, JsonObject json) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         for (JsonElement elem : json.get("ui").getAsJsonArray()) {
+            System.out.println("ARR00: " + elem);
             parseUIComponent(gui, elem.getAsJsonObject());
         }
     }
