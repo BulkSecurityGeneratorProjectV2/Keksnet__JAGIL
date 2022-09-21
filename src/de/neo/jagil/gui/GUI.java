@@ -346,6 +346,11 @@ public class GUI {
 			return isCancelledByDefault();
 		}
 		this.lastHandle = System.currentTimeMillis();
+		Point p = InventoryPosition.fromSlot(e.getSlot()).toPoint();
+		Clickable component = getUiSystem().getClickedComponent(p);
+		if (component == null) return isCancelledByDefault();
+		UIAction<GuiTypes.DataGui> click = new UIAction<>(e.getWhoClicked(), GuiTypes.DataGui.class, p, e.getClick());
+		component.click(click);
 		return handle(e);
 	}
 
@@ -357,12 +362,7 @@ public class GUI {
 	 * @return if the event should be cancelled or not.
 	 */
 	public boolean handle(InventoryClickEvent e) {
-		Point p = InventoryPosition.fromSlot(e.getSlot()).toPoint();
-		Clickable component = getUiSystem().getClickedComponent(p);
-		if (component == null) return isCancelledByDefault();
-		UIAction<GuiTypes.DataGui> click = new UIAction<>(e.getWhoClicked(), GuiTypes.DataGui.class, p, e.getClick());
-		component.click(click);
-		return true;
+		return isCancelledByDefault();
 	}
 
 	/**
