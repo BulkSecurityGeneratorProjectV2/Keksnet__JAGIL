@@ -88,13 +88,13 @@ public class PlayerListGUI extends GUI {
         if (slot == 47 && page > 0) {
             if (clickedItem.getType() == Material.PLAYER_HEAD) {
                 page--;
-                fill();
+                fillInternal();
             }
 
         } else if (slot == 51) {
             if (clickedItem.getType() == Material.PLAYER_HEAD) {
                 page++;
-                fill();
+                fillInternal();
             }
         }
 

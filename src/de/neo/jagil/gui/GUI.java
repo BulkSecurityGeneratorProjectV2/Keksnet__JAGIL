@@ -209,9 +209,9 @@ public class GUI {
 			}else {
 				inv = Bukkit.createInventory(null, type, name);
 			}
-			fill();
+			fillInternal();
 		}else {
-			fill();
+			fillInternal();
 			getPlayer().updateInventory();
 		}
 	}
@@ -223,6 +223,15 @@ public class GUI {
 	@Internal
 	protected final void update() {
 		if(p == null) throw new RuntimeException("This method should not be called on universal GUIs");
+		updateInternal();
+	}
+
+	/**
+	 * This method creates a new {@link Inventory}.
+	 * The name can be updated this way.
+	 */
+	public final void forceUpdate() {
+		this.inv = null;
 		updateInternal();
 	}
 
@@ -278,10 +287,7 @@ public class GUI {
 		return this;
 	}
 
-	/**
-	 * Fills this {@link GUI}
-	 */
-	public void fill() {
+	protected final void fillInternal() {
 		guiData.ui
 				.values()
 				.stream()
@@ -305,17 +311,13 @@ public class GUI {
 			ItemStack is = guiItem.toItem();
 			this.inv.setItem(guiItem.slot, is);
 		}
+		fill();
 	}
 
-	@Internal
-	public final boolean handleInternal(InventoryClickEvent e) {
-		if(System.currentTimeMillis() - this.lastHandle <= this.cooldown) {
-			handleBlocked(e);
-			return isCancelledByDefault();
-		}
-		this.lastHandle = System.currentTimeMillis();
-		return handle(e);
-	}
+	/**
+	 * Fills this {@link GUI}
+	 */
+	public void fill() {}
 
 	/**
 	 * This method is called once a tick to animate the {@link GUI}.
@@ -335,6 +337,16 @@ public class GUI {
 			frame.animate(tick, this);
 		}
 		getPlayer().updateInventory();
+	}
+
+	@Internal
+	public final boolean handleInternal(InventoryClickEvent e) {
+		if(System.currentTimeMillis() - this.lastHandle <= this.cooldown) {
+			handleBlocked(e);
+			return isCancelledByDefault();
+		}
+		this.lastHandle = System.currentTimeMillis();
+		return handle(e);
 	}
 
 	/**
