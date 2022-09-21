@@ -57,11 +57,15 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
         if(jsonItem.has("pos")) {
             item.slot = ParseUtil.getJsonPosition(jsonItem, "pos").toSlot();
         }else {
-            if(!item.id.isEmpty() && !jsonItem.has("slot")) {
+            if (jsonItem.has("slot")) {
+                if (jsonItem.isJsonPrimitive()) {
+                    item.slot = jsonItem.get("slot").getAsInt();
+                }else {
+                    item.slot = jsonItem.get("slot").getAsJsonObject().get("from").getAsInt();
+                }
+            }else if (!item.id.isEmpty()) {
                 item.slot = ParseUtil.getAutoSlotId(gui);
-            } else {
-                item.slot = jsonItem.get("slot").getAsInt();
-            }
+            }else throw new IllegalStateException("slot is not json");
         }
         item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
         item.name = ParseUtil.getJsonString(jsonItem, "name");
@@ -116,7 +120,7 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             }
         }
 
-        if(!jsonItem.has("fill")) {
+        if(!jsonItem.has("slot") || !json.isJsonPrimitive()) {
             gui.items.put(item.slot, item);
         }
 
@@ -129,8 +133,8 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             }
         }
 
-        if(jsonItem.has("fill")) {
-            for(JsonElement fillElem : jsonItem.get("fill").getAsJsonArray()) {
+        if(jsonItem.has("slot") && jsonItem.isJsonObject()) {
+            for(JsonElement fillElem : jsonItem.get("slot").getAsJsonArray()) {
                 if(fillElem.isJsonObject()) {
                     JsonObject fillJson = fillElem.getAsJsonObject();
                     int from = fillJson.get("from").getAsInt();
