@@ -4,9 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.neo.jagil.JAGIL;
 import de.neo.jagil.ui.components.UIComponent;
+import de.neo.jagil.util.ComponentUtil;
 import de.neo.jagil.util.InventoryPosition;
 import de.neo.jagil.util.ItemTool;
 import de.neo.jagil.util.Pair;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -174,6 +177,18 @@ public class GuiTypes {
             this.texture = "";
             this.attributes = new HashMap<>(item.attributes);
             this.animationFrames = new ArrayList<>(item.animationFrames);
+        }
+
+        public void applyNameComponent(Component component) {
+            this.name = ComponentUtil.convertToLegacy(component);
+        }
+
+        public void applyNewLoreComponent(Component component) {
+            this.lore.add(ComponentUtil.convertToLegacy(component));
+        }
+
+        public void applyLoreComponent(int line, Component component) {
+            this.lore.set(line, ComponentUtil.convertToLegacy(component));
         }
 
         public ItemStack toItem() {

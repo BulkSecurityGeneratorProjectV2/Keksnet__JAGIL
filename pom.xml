@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.neo.jagil</groupId>
 	<artifactId>JAGIL</artifactId>
-	<version>4.0-alpha.11</version>
+	<version>4.0-alpha.12</version>
 	<build>
 		<extensions>
 			<extension>
@@ -96,6 +96,26 @@
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 			<version>23.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-api</artifactId>
+			<version>4.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-platform-bukkit</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-text-minimessage</artifactId>
+			<version>4.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-text-serializer-legacy</artifactId>
+			<version>4.11.0</version>
 		</dependency>
 	</dependencies>
 </project>

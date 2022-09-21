@@ -5,8 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.neo.jagil.gui.GuiTypes;
 import de.neo.jagil.ui.components.UIComponent;
+import de.neo.jagil.util.ComponentUtil;
 import de.neo.jagil.util.InventoryPosition;
 import de.neo.jagil.util.ParseUtil;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -73,7 +76,11 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
         item.amount = item.amount == 0 ? 1 : item.amount;
         if(jsonItem.has("lore")) {
             for(JsonElement strElem : jsonItem.get("lore").getAsJsonArray()) {
-                item.lore.add(strElem.getAsString());
+                String str = strElem.getAsString();
+                if (!str.matches("§[0-9a-fkl-or]")) {
+                    str = ComponentUtil.convertToLegacy(MiniMessage.miniMessage().deserialize(str));
+                }
+                item.lore.add(str);
             }
         }
 
