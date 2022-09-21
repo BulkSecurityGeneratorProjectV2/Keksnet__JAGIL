@@ -14,6 +14,7 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class XmlGuiReader extends GuiReader<Object> {
     }
 
     @Override
-    public GuiTypes.DataGui read(Path guiFile) throws IOException {
+    public GuiTypes.DataGui read(String content) throws IOException {
         GuiTypes.DataGui gui = new GuiTypes.DataGui();
 
         String tag = "";
@@ -42,7 +43,7 @@ public class XmlGuiReader extends GuiReader<Object> {
         GuiTypes.GuiEnchantment enchantment = null;
 
         try {
-            XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(Files.newInputStream(guiFile));
+            XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(new StringReader(content));
 
             parser: {
                 while(reader.hasNext()) {

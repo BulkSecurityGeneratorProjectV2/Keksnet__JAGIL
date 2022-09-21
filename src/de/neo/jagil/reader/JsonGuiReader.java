@@ -24,11 +24,9 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
     }
 
     @Override
-    public GuiTypes.DataGui read(Path guiFile) throws IOException, RuntimeException {
+    public GuiTypes.DataGui read(String content) throws RuntimeException {
         GuiTypes.DataGui gui = new GuiTypes.DataGui();
-
-        String jsonString = Files.readString(guiFile);
-        JsonObject json = new Gson().fromJson(jsonString, JsonObject.class);
+        JsonObject json = new Gson().fromJson(content, JsonObject.class);
 
         gui.name = ParseUtil.getJsonString(json, "name");
         gui.size = json.get("size").getAsInt();
@@ -43,7 +41,7 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
                 throw new RuntimeException(e);
             }
         }else {
-            Bukkit.getLogger().warning("[JAGIL] Empty GUI " + guiFile + ": no items section!");
+            Bukkit.getLogger().warning("[JAGIL] Empty GUI " + gui.name + ": no items section!");
             return gui;
         }
 

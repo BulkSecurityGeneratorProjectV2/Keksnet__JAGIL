@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 
@@ -40,7 +41,8 @@ public class GuiReaderManager {
     public GuiTypes.DataGui readFile(Path file) throws IOException {
         String[] fileName = file.toString().split("[.]");
         GuiReader<?> reader = GuiReaderManager.getInstance().getReader(fileName[fileName.length - 1].toLowerCase());
-        return reader.read(file);
+        String content = Files.readString(file);
+        return reader.read(content);
     }
 
     public static GuiReaderManager getInstance() {

@@ -17,7 +17,7 @@ public abstract class GuiReader<T> {
         this.fileType = fileType.toLowerCase();
     }
 
-    public abstract GuiTypes.DataGui read(Path guiFile) throws IOException;
+    public abstract GuiTypes.DataGui read(String content) throws IOException;
 
     public abstract void parseItem(GuiTypes.DataGui gui, T itemObject);
 
