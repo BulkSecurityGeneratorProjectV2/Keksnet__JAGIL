@@ -60,6 +60,7 @@ public class GuiTypes {
          */
         public void merge(DataGui other) {
             this.items.putAll(other.items);
+            rebuildItemIdTable();
         }
 
         /**
@@ -85,6 +86,20 @@ public class GuiTypes {
                 return new ItemStack(Material.AIR);
             }
             return this.items.get(slot).toItem();
+        }
+
+        /**
+         * Returns the {@link GuiItem} with the given id.
+         *
+         * @param itemId the id of the {@link GuiItem}
+         * @return the {@link GuiItem} with the given id
+         */
+        public GuiItem getGuiItem(String itemId) {
+            int slot = getSlot(itemId);
+            if(slot == 999) {
+                return null;
+            }
+            return this.items.get(slot);
         }
 
         /**
