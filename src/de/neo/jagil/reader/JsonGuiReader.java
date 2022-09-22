@@ -64,7 +64,12 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
                 if (jsonItem.isJsonPrimitive()) {
                     item.slot = jsonItem.get("slot").getAsInt();
                 }else {
-                    item.slot = jsonItem.get("slot").getAsJsonObject().get("from").getAsInt();
+                    JsonElement slotElem = jsonItem.get("slot").getAsJsonArray().get(0);
+                    if (slotElem.isJsonObject()) {
+                        item.slot = slotElem.getAsJsonObject().get("from").getAsInt();
+                    }else {
+                        item.slot = slotElem.getAsJsonPrimitive().getAsInt();
+                    }
                 }
             }else if (!item.id.isEmpty()) {
                 item.slot = ParseUtil.getAutoSlotId(gui);
@@ -140,7 +145,7 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             }
         }
 
-        if(jsonItem.has("slot") && jsonItem.isJsonObject()) {
+        if(jsonItem.has("slot") && jsonItem.get("slot").isJsonArray()) {
             for(JsonElement fillElem : jsonItem.get("slot").getAsJsonArray()) {
                 if(fillElem.isJsonObject()) {
                     JsonObject fillJson = fillElem.getAsJsonObject();
