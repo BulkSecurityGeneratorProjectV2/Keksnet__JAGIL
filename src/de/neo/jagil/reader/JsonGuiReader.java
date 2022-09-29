@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class JsonGuiReader extends GuiReader<JsonObject> {
 
@@ -31,7 +32,7 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
         GuiTypes.DataGui gui = new GuiTypes.DataGui();
         JsonObject json = new Gson().fromJson(content, JsonObject.class);
 
-        gui.name = ParseUtil.getJsonString(json, "name");
+        gui.name = ComponentUtil.convertFromDifferentFormats(ParseUtil.getJsonString(json, "name"));
         gui.size = json.get("size").getAsInt();
         gui.animationMod = ParseUtil.getJsonInt(json, "animationTick");
 
@@ -76,16 +77,13 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             }else throw new IllegalStateException("slot is not json");
         }
         item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
-        item.name = ParseUtil.getJsonString(jsonItem, "name");
+        item.name = ComponentUtil.convertFromDifferentFormats(ParseUtil.getJsonString(jsonItem, "name"));
         item.amount = ParseUtil.getJsonInt(jsonItem, "amount");
         item.amount = item.amount == 0 ? 1 : item.amount;
         if(jsonItem.has("lore")) {
             for(JsonElement strElem : jsonItem.get("lore").getAsJsonArray()) {
                 String str = strElem.getAsString();
-                if (!str.matches("§[0-9a-fkl-or]")) {
-                    str = ComponentUtil.convertToLegacy(MiniMessage.miniMessage().deserialize(str));
-                }
-                item.lore.add(str);
+                item.lore.add(ComponentUtil.convertFromDifferentFormats(str));
             }
         }
 
