@@ -130,7 +130,7 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             }
         }
 
-        if(!jsonItem.has("slot") || !json.isJsonPrimitive()) {
+        if(!jsonItem.has("slot") || !jsonItem.get("slot").isJsonPrimitive()) {
             gui.items.put(item.slot, item);
         }
 
