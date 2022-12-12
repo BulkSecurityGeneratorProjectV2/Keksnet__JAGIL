@@ -348,9 +348,10 @@ public class GUI {
 		this.lastHandle = System.currentTimeMillis();
 		Point p = InventoryPosition.fromSlot(e.getSlot()).toPoint();
 		Clickable component = getUiSystem().getClickedComponent(p);
-		if (component == null) return isCancelledByDefault();
-		UIAction<GuiTypes.DataGui> click = new UIAction<>(e.getWhoClicked(), GuiTypes.DataGui.class, p, e.getClick());
-		component.click(click);
+		if (component != null) {
+			UIAction<GuiTypes.DataGui> click = new UIAction<>(e.getWhoClicked(), GuiTypes.DataGui.class, p, e.getClick());
+			component.click(click);
+		}
 		return handle(e);
 	}
 
