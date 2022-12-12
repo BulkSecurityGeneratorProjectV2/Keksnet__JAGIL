@@ -174,7 +174,7 @@ public class GuiTypes {
             this.lore = new ArrayList<>(item.lore);
             this.enchantments = new HashSet<>(item.enchantments);
             this.customModelData = item.customModelData;
-            this.texture = "";
+            this.texture = item.texture;
             this.attributes = new HashMap<>(item.attributes);
             this.animationFrames = new ArrayList<>(item.animationFrames);
         }
