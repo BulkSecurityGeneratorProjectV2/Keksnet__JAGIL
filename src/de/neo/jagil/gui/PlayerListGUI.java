@@ -26,12 +26,12 @@ public class PlayerListGUI extends GUI {
     private int page = 0;
 
     protected String backHead = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ==";
-    protected String backString = "§cBack";
-    protected String playerNameFormat = "§9%player%";
+    protected String backString = "Â§cBack";
+    protected String playerNameFormat = "Â§9%player%";
     protected String nextPageHead = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWYxMzNlOTE5MTlkYjBhY2VmZGMyNzJkNjdmZDg3YjRiZTg4ZGM0NGE5NTg5NTg4MjQ0NzRlMjFlMDZkNTNlNiJ9fX0=";
     protected String prevPageHead = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTNmYzUyMjY0ZDhhZDllNjU0ZjQxNWJlZjAxYTIzOTQ3ZWRiY2NjY2Y2NDkzNzMyODliZWE0ZDE0OTU0MWY3MCJ9fX0=";
-    protected String nextPageString = "§aNext Page";
-    protected String prevPageString = "§aPrevious Page";
+    protected String nextPageString = "Â§aNext Page";
+    protected String prevPageString = "Â§aPrevious Page";
 
     public PlayerListGUI(Player player, String title) {
         super(title, 54, player);

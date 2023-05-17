@@ -5,4 +5,5 @@ de.neo.jagil.gui
 de.neo.jagil.handler
 de.neo.jagil.listener
 de.neo.jagil.manager
+de.neo.jagil.reader
 de.neo.jagil.util
