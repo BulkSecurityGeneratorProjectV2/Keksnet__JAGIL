@@ -2,7 +2,13 @@ de.neo.jagil
 de.neo.jagil.annotation
 de.neo.jagil.exception
 de.neo.jagil.gui
+de.neo.jagil.gui.prebuild
 de.neo.jagil.handler
 de.neo.jagil.listener
 de.neo.jagil.manager
+de.neo.jagil.reader
+de.neo.jagil.ui
+de.neo.jagil.ui.components
+de.neo.jagil.ui.impl
+de.neo.jagil.ui.prebuilt
 de.neo.jagil.util

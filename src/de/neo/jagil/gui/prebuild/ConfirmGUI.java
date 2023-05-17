@@ -28,8 +28,8 @@ public class ConfirmGUI extends GUI {
 		this.cmd_no = cmd_no;
 		this.base64_yes = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0=";
 		this.base64_no = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ==";
-		this.yes_item = "§aYes";
-		this.no_item = "§cNo";
+		this.yes_item = "Â§aYes";
+		this.no_item = "Â§cNo";
 	}
 	
 	public ConfirmGUI(String question, ConfirmationHandler handler, OfflinePlayer p) {
@@ -37,8 +37,8 @@ public class ConfirmGUI extends GUI {
 		this.handler = handler;
 		this.base64_yes = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0=";
 		this.base64_no = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ==";
-		this.yes_item = "§aYes";
-		this.no_item = "§cNo";
+		this.yes_item = "Â§aYes";
+		this.no_item = "Â§cNo";
 	}
 	
 	public ConfirmGUI setBase64Yes(String base64) {

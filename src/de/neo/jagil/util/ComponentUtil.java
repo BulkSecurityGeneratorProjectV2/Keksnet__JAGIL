@@ -11,7 +11,7 @@ public class ComponentUtil {
     }
 
     public static String convertFromDifferentFormats(String input) {
-        if (!input.matches(".*(ง[0-9a-fkl-or])+.*")) {
+        if (!input.matches(".*(ยง[0-9a-fkl-or])+.*")) {
             input = ComponentUtil.convertToLegacy(MiniMessage.miniMessage().deserialize(input));
         }
         return input;
