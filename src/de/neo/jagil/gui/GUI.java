@@ -288,11 +288,13 @@ public class GUI {
 	}
 
 	protected final void fillInternal() {
-		guiData.ui
-				.values()
-				.stream()
-				.filter(it -> !getUiSystem().hasComponent(it.getId()))
-				.forEach(getUiSystem()::addComponent);
+		if (guiData != null) {
+			guiData.ui
+					.values()
+					.stream()
+					.filter(it -> !getUiSystem().hasComponent(it.getId()))
+					.forEach(getUiSystem()::addComponent);
+		}
 		getUiSystem().render();
 		GuiTypes.DataGui data = ((UIRenderPlainProvider<GuiTypes.DataGui>) getUiSystem().getRenderProvider()).getRenderPlain();
 		if (guiData != null) {
@@ -300,7 +302,7 @@ public class GUI {
 			data.size = guiData.size;
 			data.animationMod = guiData.animationMod;
 			data.merge(guiData);
-		}else {
+		} else {
 			data.name = getName();
 			data.size = getSize();
 			data.animationMod = 0;
