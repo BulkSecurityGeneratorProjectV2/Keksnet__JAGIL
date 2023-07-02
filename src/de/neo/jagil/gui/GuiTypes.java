@@ -92,7 +92,7 @@ public class GuiTypes {
         }
 
         /**
-         * Returns the {@link GuiItem} with the given id.
+         * Returns a copy of the {@link GuiItem} with the given id.
          *
          * @param itemId the id of the {@link GuiItem}
          * @return the {@link GuiItem} with the given id
@@ -102,7 +102,7 @@ public class GuiTypes {
             if(slot == 999) {
                 return null;
             }
-            return this.items.get(slot);
+            return new GuiItem(this.items.get(slot));
         }
 
         /**
