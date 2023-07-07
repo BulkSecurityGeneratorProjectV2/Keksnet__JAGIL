@@ -62,25 +62,33 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             item.slot = ParseUtil.getJsonPosition(jsonItem, "pos").toSlot();
         }else {
             if (jsonItem.has("slot")) {
-                if (jsonItem.isJsonPrimitive()) {
-                    item.slot = jsonItem.get("slot").getAsInt();
-                }else {
-                    JsonElement slotElem = jsonItem.get("slot").getAsJsonArray().get(0);
-                    if (slotElem.isJsonObject()) {
-                        item.slot = slotElem.getAsJsonObject().get("from").getAsInt();
-                    }else {
-                        item.slot = slotElem.getAsJsonPrimitive().getAsInt();
+                JsonElement slotElement = jsonItem.get("slot");
+                if (slotElement.isJsonPrimitive()) {
+                    item.slot = slotElement.getAsInt();
+                } else if (slotElement.isJsonObject()) {
+                    JsonObject fillObject = slotElement.getAsJsonObject();
+                    item.slot = fillObject.get("from").getAsInt();
+                } else if (slotElement.isJsonArray()) {
+                    JsonElement baseSlot = slotElement.getAsJsonArray().get(0);
+                    if (baseSlot.isJsonObject()) {
+                        item.slot = baseSlot.getAsJsonObject().get("from").getAsInt();
+                    } else if (baseSlot.isJsonPrimitive()) {
+                        item.slot = baseSlot.getAsJsonPrimitive().getAsInt();
+                    } else {
+                        Bukkit.getLogger().warning("[JAGIL] slot property for item " + item.id + " is invalid!");
                     }
+                } else {
+                    Bukkit.getLogger().warning("[JAGIL] slot property for item " + item.id + " is invalid!");
                 }
-            }else if (!item.id.isEmpty()) {
+            } else if (!item.id.isEmpty()) {
                 item.slot = ParseUtil.getAutoSlotId(gui);
-            }else throw new IllegalStateException("slot is not json");
+            } else throw new IllegalStateException("slot is not json");
         }
         item.material = Material.getMaterial(ParseUtil.getJsonString(jsonItem, "material"));
         item.name = ComponentUtil.convertFromDifferentFormats(ParseUtil.getJsonString(jsonItem, "name"));
         item.amount = ParseUtil.getJsonInt(jsonItem, "amount");
         item.amount = item.amount == 0 ? 1 : item.amount;
-        if(jsonItem.has("lore")) {
+        if (jsonItem.has("lore")) {
             for(JsonElement strElem : jsonItem.get("lore").getAsJsonArray()) {
                 String str = strElem.getAsString();
                 item.lore.add(ComponentUtil.convertFromDifferentFormats(str));
@@ -143,24 +151,22 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
             }
         }
 
-        if(jsonItem.has("slot") && jsonItem.get("slot").isJsonArray()) {
-            for(JsonElement fillElem : jsonItem.get("slot").getAsJsonArray()) {
-                if(fillElem.isJsonObject()) {
-                    JsonObject fillJson = fillElem.getAsJsonObject();
-                    int from = fillJson.get("from").getAsInt();
-                    int to = fillJson.get("to").getAsInt();
-                    for(int i = from; i <= to; i++) {
+        if(jsonItem.has("slot")) {
+            JsonElement slotElement = jsonItem.get("slot");
+            if (slotElement.isJsonObject()) {
+                applyFillObject(gui, item, slotElement.getAsJsonObject());
+            } else if (slotElement.isJsonArray()) {
+                for(JsonElement fillElem : jsonItem.get("slot").getAsJsonArray()) {
+                    if(fillElem.isJsonObject()) {
+                        applyFillObject(gui, item, fillElem.getAsJsonObject());
+                    }else if(fillElem.isJsonPrimitive()) {
+                        int slot = fillElem.getAsInt();
                         GuiTypes.GuiItem item2 = new GuiTypes.GuiItem(item);
-                        item2.slot = i;
-                        gui.items.put(i, item2);
+                        item2.slot = slot;
+                        gui.items.put(slot, item2);
+                    }else {
+                        Bukkit.getLogger().warning("[JAGIL] Invalid fill property item in GUI:" + fillElem);
                     }
-                }else if(fillElem.isJsonPrimitive()) {
-                    int slot = fillElem.getAsInt();
-                    GuiTypes.GuiItem item2 = new GuiTypes.GuiItem(item);
-                    item2.slot = slot;
-                    gui.items.put(slot, item2);
-                }else {
-                    Bukkit.getLogger().warning("[JAGIL] Invalid fill property item in GUI:" + fillElem);
                 }
             }
         }
@@ -187,5 +193,15 @@ public class JsonGuiReader extends GuiReader<JsonObject> {
     @Override
     public String getFileType() {
         return super.getFileType();
+    }
+
+    private void applyFillObject(GuiTypes.DataGui gui, GuiTypes.GuiItem item, JsonObject fillObject) {
+        int from = fillObject.get("from").getAsInt();
+        int to = fillObject.get("to").getAsInt();
+        for (int i = from; i <= to; i++) {
+            GuiTypes.GuiItem item2 = new GuiTypes.GuiItem(item);
+            item2.slot = i;
+            gui.items.put(i, item2);
+        }
     }
 }
