@@ -3,6 +3,7 @@ package de.neo.jagil.util;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import de.neo.jagil.gui.GUI;
+import de.neo.jagil.gui.GuiTypes;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -15,6 +16,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * The ItemBuilder is an alternative to the {@link ItemTool} class.
@@ -26,11 +28,31 @@ public class ItemBuilder {
     private String name;
     private int amount;
     private int durability;
-    private ArrayList<String> lore;
-    private ArrayList<Pair<Enchantment, Integer>> enchantments;
+    private List<String> lore;
+    private List<Pair<Enchantment, Integer>> enchantments;
     private String texture;
     private OfflinePlayer skullOwner;
     private int customModelData;
+
+    /**
+     * Create a new ItemBuilder from the values of a {@link de.neo.jagil.gui.GuiTypes.GuiItem}.
+     * Be aware that this operation will eventually discard some information.
+     *
+     * @param guiItem item to get the values from
+     */
+    public ItemBuilder(GuiTypes.GuiItem guiItem) {
+        this.material = guiItem.material;
+        this.name = guiItem.name;
+        this.amount = guiItem.amount;
+        this.durability = -1;
+        this.lore = guiItem.lore;
+        this.enchantments = guiItem.enchantments
+                .stream()
+                .map(ench -> new Pair<>(ench.enchantment, ench.level))
+                .collect(Collectors.toList());
+        this.texture = guiItem.texture;
+        this.skullOwner = null;
+    }
 
     /**
      * Create a new ItemBuilder.
@@ -130,7 +152,7 @@ public class ItemBuilder {
 
     public ItemStack build() {
         ItemStack is = new ItemStack(material, amount);
-        enchantments.forEach(pair -> is.addEnchantment(pair.getKey(), pair.getValue()));
+        enchantments.forEach(pair -> is.addUnsafeEnchantment(pair.getKey(), pair.getValue()));
         ItemMeta meta = is.getItemMeta();
         if(durability == -2) {
             meta.setUnbreakable(true);
