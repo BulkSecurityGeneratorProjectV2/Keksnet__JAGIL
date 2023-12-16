@@ -53,7 +53,7 @@
   <distributionManagement>
   	<repository>
   		<id>ftp-repo</id>
-  		<url>ftp://neo8.de/repo/</url>
+  		<url>ftps://neo8.de/repo/</url>
   	</repository>
   </distributionManagement>
   <repositories>
